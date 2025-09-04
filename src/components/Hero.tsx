@@ -127,11 +127,7 @@ export default function Hero() {
       </button>
 
       {/* Bottom shape divider */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-16 sm:h-20 lg:h-24 overflow-hidden">
-        <svg viewBox="0 0 1440 80" xmlns="http://www.w3.org/2000/svg" className="h-full w-full fill-neutral-950">
-          <path d="M0,32 C180,64 360,0 540,16 C720,32 900,80 1080,64 C1260,48 1350,40 1440,48 L1440,80 L0,80 Z" />
-        </svg>
-      </div>
+      
     </section>
   );
 }
