@@ -24,7 +24,7 @@ export const metadata = {
   openGraph: {
     title: "Blue Arc Networks – Reliable IT Help",
     description: "Serving Chico and Northern California with IT support, networking, and repair.",
-    url: "https://bluearcnetworks.com",
+    url: "https://bluearcnetworks.tech",
     siteName: "Blue Arc Networks",
     images: [
       {
