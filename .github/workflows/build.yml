@@ -1,21 +1,85 @@
+name: React CI
+
 on:
   push:
-    branches: main
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  publish:
+  build:
+    name: Build & Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write # allow GITHUB_TOKEN to publish packages
+    strategy:
+      matrix:
+        node-version: [18, 20]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
-          node-version: "20"
-      - run: npm ci
-      - run: npm test
-      - uses: JS-DevTools/npm-publish@v3
+          node-version: ${{ matrix.node-version }}
+          cache: npm
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Lint (if present)
+        run: npm run lint --if-present
+
+      - name: Test (if present)
+        run: npm test --if-present -- --ci --watchAll=false
+
+      - name: Build
+        run: npm run build
+
+      - name: Upload production build artifact
+        if: matrix.node-version == 20
+        uses: actions/upload-artifact@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          registry: "https://npm.pkg.github.com"
+          name: react-build
+          path: |
+            build
+            dist
+          if-no-files-found: ignore
+
+  # Optional: auto-deploy to GitHub Pages when pushing to main
+  # To enable, ensure your repo has Pages set to "GitHub Actions" and
+  # your build output directory is either `build/` or `dist/`.
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from this workflow
+      contents: read
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: react-build
+          path: ./site
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
