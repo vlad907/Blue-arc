@@ -1,0 +1,11 @@
+name: ci
+on:
+  push:
+    branches: [ "main" ] # Update this to whatever your default branch is
+
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Say hello
+        run: npm run dev
