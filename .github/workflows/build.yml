@@ -1,11 +1,21 @@
-name: ci
 on:
   push:
-    branches: [ "main" ] # Update this to whatever your default branch is
+    branches: main
 
 jobs:
-  hello:
+  publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write # allow GITHUB_TOKEN to publish packages
     steps:
-      - name: Say hello
-        run: npm run dev
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+      - run: npm ci
+      - run: npm test
+      - uses: JS-DevTools/npm-publish@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          registry: "https://npm.pkg.github.com"
