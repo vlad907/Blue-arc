@@ -30,27 +30,20 @@ jobs:
       - name: Install deps
         run: npm ci
 
-      # If this is Next.js with static export (recommended for Pages), either:
-      #  - set `output: 'export'` in next.config.js and just `npm run build`, OR
-      #  - run `npm run export` after build (we try both gracefully below)
-      - name: Build (Next/React)
+      - name: Build (Next static export)
+        env:
+          NEXT_DISABLE_ESLINT: 1
         run: |
           set -e
-          if npm run | grep -q " export"; then
-            npm run build
-            npm run export || npx next export || true
-          else
-            # CRA/Vite fallback: build to build/ or dist/
-            npm run build || true
-          fi
+          # Build and export a static site to out/
+          npx next build
+          npx next export
 
       - name: Detect build output
         id: detect
         run: |
           if [ -d out ]; then echo "dir=out" >> $GITHUB_OUTPUT; exit 0; fi
-          if [ -d build ]; then echo "dir=build" >> $GITHUB_OUTPUT; exit 0; fi
-          if [ -d dist ]; then echo "dir=dist" >> $GITHUB_OUTPUT; exit 0; fi
-          echo "No build output folder found" >&2; exit 1
+          echo "No build output folder found (expected out/)" >&2; exit 1
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
