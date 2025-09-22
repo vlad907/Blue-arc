@@ -52,7 +52,7 @@ export default function NavBar() {
     setTimeout(onLoadHash, 0);
     window.addEventListener('hashchange', onHashChange);
 
-    const sections = ["home", "services", "about", "trustedby", "contact", "pricing", "footer"];
+    const sections = ["home", "services", "about", "trustedby", "contact", "pricing", "gallery", "footer"];
     const onScrollSpy = () => {
       let current = "home";
       for (const id of sections) {
@@ -82,7 +82,7 @@ export default function NavBar() {
     };
   }, []);
   return (
-    <nav className="sticky top-0 z-50 relative border-b border-white/10 bg-white/95 backdrop-blur dark:bg-gray-900/90">
+    <nav className="sticky top-0 z-50 relative border-b border-white/10 bg-gray-900/80 backdrop-blur">
       <div className="max-w-screen-xl flex flex-nowrap items-center justify-between mx-auto p-4">
         <a href="#home" className="flex items-center space-x-3 rtl:space-x-reverse">
           <Image
@@ -92,7 +92,7 @@ export default function NavBar() {
           height={64}
           className="h-10 md:h-16 w-auto"
         />
-          <span className="self-center text-2xl md:text-3xl font-semibold whitespace-nowrap truncate dark:text-white">
+          <span className="self-center text-2xl md:text-3xl font-semibold whitespace-nowrap truncate text-white">
             Blue Arc <span className="text-blue-600 dark:text-blue-400">Networks</span>
           </span>
         </a>
@@ -101,7 +101,7 @@ export default function NavBar() {
           onClick={() => setOpen(v => !v)}
           aria-controls="navbar-default"
           aria-expanded={open}
-          className="ml-2 inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-300 rounded-lg md:hidden hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/20 dark:text-gray-300 dark:hover:bg-white/10"
+          className="ml-2 inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-300 rounded-lg md:hidden focus:outline-none focus:ring-2 focus:ring-white/20"
         >
           <span className="sr-only">Open main menu</span>
           <svg
@@ -121,14 +121,14 @@ export default function NavBar() {
           </svg>
         </button>
         <div className={`${open ? "block" : "hidden"} absolute left-0 right-0 top-full w-full md:static md:block md:w-auto`} id="navbar-default">
-          <ul className="font-medium flex flex-col mx-4 mt-3 rounded-xl border border-white/10 bg-neutral-900/95 p-3 shadow-lg backdrop-blur md:mx-0 md:mt-0 md:flex-row md:space-x-6 md:items-center md:rounded-none md:border-0 md:bg-transparent md:p-0 md:shadow-none">
+          <ul className="font-medium flex flex-col mx-4 mt-3 rounded-xl border border-transparent bg-transparent p-3 shadow-none md:mx-0 md:mt-0 md:flex-row md:space-x-6 md:items-center md:rounded-none md:border-0 md:bg-transparent md:p-0 md:shadow-none">
             <li>
               <a
                 href="#home"
-                className={`block rounded-md px-4 py-3 md:px-0 md:py-2 ${
+                className={`block px-4 py-3 md:px-0 md:py-2 ${
                   activeId === "home"
-                    ? "text-blue-600 dark:text-blue-400 font-semibold"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                    ? "text-blue-400 font-semibold"
+                    : "text-white/80 hover:text-white"
                 }`}
                 aria-current="page"
               >
@@ -138,10 +138,10 @@ export default function NavBar() {
             <li>
               <a
                 href="#services"
-                className={`block rounded-md px-4 py-3 md:px-0 md:py-2 ${
+                className={`block px-4 py-3 md:px-0 md:py-2 ${
                   activeId === "services"
-                    ? "text-blue-600 dark:text-blue-400 font-semibold"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                    ? "text-blue-400 font-semibold"
+                    : "text-white/80 hover:text-white"
                 }`}
               >
                 Services
@@ -150,10 +150,10 @@ export default function NavBar() {
             <li>
               <a
                 href="#about"
-                className={`block rounded-md px-4 py-3 md:px-0 md:py-2 ${
+                className={`block px-4 py-3 md:px-0 md:py-2 ${
                   activeId === "about"
-                    ? "text-blue-600 dark:text-blue-400 font-semibold"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                    ? "text-blue-400 font-semibold"
+                    : "text-white/80 hover:text-white"
                 }`}
               >
                 About
@@ -162,10 +162,10 @@ export default function NavBar() {
             <li>
               <a
                 href="#contact"
-                className={`block rounded-md px-4 py-3 md:px-0 md:py-2 ${
+                className={`block px-4 py-3 md:px-0 md:py-2 ${
                   activeId === "contact"
-                    ? "text-blue-600 dark:text-blue-400 font-semibold"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                    ? "text-blue-400 font-semibold"
+                    : "text-white/80 hover:text-white"
                 }`}
               >
                 Contact
@@ -174,10 +174,10 @@ export default function NavBar() {
             <li>
               <a
                 href="#pricing"
-                className={`block rounded-md px-4 py-3 md:px-0 md:py-2 ${
+                className={`block px-4 py-3 md:px-0 md:py-2 ${
                   activeId === "pricing"
-                    ? "text-blue-600 dark:text-blue-400 font-semibold"
-                    : "text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                    ? "text-blue-400 font-semibold"
+                    : "text-white/80 hover:text-white"
                 }`}
               >
                 Pricing
@@ -185,8 +185,18 @@ export default function NavBar() {
             </li>
             <li>
               <a
+                href="#gallery"
+                className={`block px-4 py-3 md:px-0 md:py-2 ${
+                  activeId === "gallery" ? "text-blue-400 font-semibold" : "text-white/80 hover:text-white"
+                }`}
+              >
+                Gallery
+              </a>
+            </li>
+            <li>
+              <a
                 href="tel:+15302089290"
-                className="block rounded-md px-4 py-3 md:px-0 md:py-2 text-gray-900 md:border-0 md:hover:text-blue-700 dark:text-white md:dark:hover:text-blue-500"
+                className="block px-4 py-3 md:px-0 md:py-2 text-white/90 hover:text-white"
               >
                 (530) 208-9290
               </a>

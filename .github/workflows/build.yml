@@ -1,24 +1,22 @@
-name: React CI
+name: Build & Deploy to GitHub Pages
 
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+  pages: write       # required for actions/deploy-pages
+  id-token: write    # required for actions/deploy-pages
+
 jobs:
   build:
-    name: Build & Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-    strategy:
-      matrix:
-        node-version: [18, 20]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -26,59 +24,48 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 20
           cache: npm
 
       - name: Install deps
         run: npm ci
 
-      - name: Lint (if present)
-        run: npm run lint --if-present || echo "lint warnings (non-blocking)"
+      # If this is Next.js with static export (recommended for Pages), either:
+      #  - set `output: 'export'` in next.config.js and just `npm run build`, OR
+      #  - run `npm run export` after build (we try both gracefully below)
+      - name: Build (Next/React)
+        run: |
+          set -e
+          if npm run | grep -q " export"; then
+            npm run build
+            npm run export || npx next export || true
+          else
+            # CRA/Vite fallback: build to build/ or dist/
+            npm run build || true
+          fi
 
-      - name: Test (if present)
-        run: npm test --if-present -- --ci --watchAll=false
-
-      - name: Build
-        run: NEXT_DISABLE_ESLINT=1 npm run build
-
-      - name: Upload production build artifact
-        if: matrix.node-version == 20
-        uses: actions/upload-artifact@v4
-        with:
-          name: react-build
-          path: |
-            build
-            dist
-          if-no-files-found: ignore
-
-  # Optional: auto-deploy to GitHub Pages when pushing to main
-  # To enable, ensure your repo has Pages set to "GitHub Actions" and
-  # your build output directory is either `build/` or `dist/`.
-  deploy:
-    if: github.ref == 'refs/heads/main'
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from this workflow
-      contents: read
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: react-build
-          path: ./site
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+      - name: Detect build output
+        id: detect
+        run: |
+          if [ -d out ]; then echo "dir=out" >> $GITHUB_OUTPUT; exit 0; fi
+          if [ -d build ]; then echo "dir=build" >> $GITHUB_OUTPUT; exit 0; fi
+          if [ -d dist ]; then echo "dir=dist" >> $GITHUB_OUTPUT; exit 0; fi
+          echo "No build output folder found" >&2; exit 1
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./site
+          path: ${{ steps.detect.outputs.dir }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -7,6 +7,7 @@ import Contact from "@/components/Contact"
 import About from "@/components/About"
 import Pricing from "@/components/Pricing"
 import Footer from "@/components/Footer";
+import Jobs from "@/components/gallery"
 
 export const metadata = {
   title: "Blue Arc Networks – Reliable IT Help",
@@ -53,6 +54,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Trustedby />
         <Contact />
         <Pricing />
+        <Jobs/>
         <Footer />
         <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
       </body>

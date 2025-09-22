@@ -63,13 +63,13 @@ const Pricing = () => {
         <p className="mt-4 max-w-2xl mx-auto text-lg text-neutral-300 text-center">
           Transparent, straightforward pricing for IT support and repair services.
         </p>
-        <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-2 justify-center">
           <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur shadow-lg shadow-black/20">
             <h3 className="text-xl font-semibold text-white">Hourly Rate</h3>
             <p className="mt-2 text-neutral-300">
               Our standard rate for all IT support, repair, and networking services.
             </p>
-            <p className="mt-6 text-3xl font-bold text-sky-400">$40<span className="text-lg text-neutral-400"> / hr</span></p>
+            <p className="mt-6 text-3xl font-bold text-sky-400">$60<span className="text-lg text-neutral-400"> / hr</span></p>
             <ul className="mt-4 space-y-2 text-neutral-200">
               <li>Charged after the initial 2‑hour minimum</li>
               <li>Covers all standard IT support services</li>
@@ -82,7 +82,7 @@ const Pricing = () => {
             <p className="mt-2 text-neutral-300">
               Every service call begins with a flat 2‑hour minimum charge to cover travel and setup.
             </p>
-            <p className="mt-6 text-3xl font-bold text-white">$80<span className="text-lg text-neutral-400"> minimum</span></p>
+            <p className="mt-6 text-3xl font-bold text-white">$120<span className="text-lg text-neutral-400"> minimum</span></p>
             <ul className="mt-4 space-y-2 text-neutral-200">
               <li>Covers the first 2 hours, even if the job takes less time</li>
               <li>Ensures availability and dedicated on‑site service</li>
@@ -90,17 +90,6 @@ const Pricing = () => {
             </ul>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur shadow-lg shadow-black/20">
-            <h3 className="text-xl font-semibold text-white">Example Jobs</h3>
-            <p className="mt-2 text-neutral-300">
-              Most smaller repairs or troubleshooting sessions fall under the minimum.
-            </p>
-            <ul className="mt-6 space-y-2 text-neutral-200">
-              <li>Laptop repair that takes 45 minutes → $80</li>
-              <li>Network troubleshooting that takes 3 hours → $120</li>
-              <li>Server setup that takes 5 hours → $200</li>
-            </ul>
-          </div>
         </div>
           <div className="mt-12 flex justify-center">
             <a

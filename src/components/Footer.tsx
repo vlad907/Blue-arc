@@ -54,6 +54,7 @@ const Footer = () => {
               <li><a href="#services" className="hover:text-sky-400">Services</a></li>
               <li><a href="#about" className="hover:text-sky-400">About</a></li>
               <li><a href="#pricing" className="hover:text-sky-400">Pricing</a></li>
+              <li><a href="#gallery" className="hover:text-sky-400">Gallery</a></li>
               <li><a href="#contact" className="hover:text-sky-400">Contact</a></li>
             </ul>
           </div>

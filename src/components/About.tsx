@@ -1,5 +1,3 @@
-
-
 "use client";
 import React from "react";
 
@@ -19,50 +17,21 @@ const About = () => {
           About Me
         </h2>
         <p className="mt-6 text-lg leading-8 text-neutral-300 text-center">
-          Hi, I’m Vlad Avdeev — founder of Blue Arc Networks and a Computer Science
-          student at Chico State. I bring together years of hands-on IT support,
-          network engineering, and repair experience with a strong academic foundation
-          in software and systems.
+          I am Vlad Avdeev, founder of Blue Arc Networks. I combine years of IT support,
+          network engineering, and repair experience with a strong background in software
+          and systems to deliver professional, reliable solutions.
         </p>
         <div className="mt-10 grid gap-8 sm:grid-cols-2">
           <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur">
             <h3 className="text-xl font-semibold text-white">Technical Background</h3>
             <p className="mt-2 text-neutral-300">
-              I’ve spent years working in IT support and computer repair, providing
-              services for both small businesses and individual clients. I’ve built
-              VPN servers and firewalls, deployed and optimized Unifi networks,
-              configured smart switches, and integrated authentication systems like
-              Windows Domain Radius. I also work on data recovery, server maintenance,
-              and end‑to‑end network design.
+              I have extensive experience in IT support, computer repair, and network infrastructure. My work includes building VPN servers and firewalls, deploying and optimizing Unifi networks, configuring smart switches, and integrating authentication systems such as Windows Domain Radius. I also specialize in data recovery, server maintenance, and end‑to‑end network design.
             </p>
           </div>
           <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur">
             <h3 className="text-xl font-semibold text-white">Entrepreneurship</h3>
             <p className="mt-2 text-neutral-300">
-              Through Blue Arc Networks, I’ve been building a professional IT services
-              business around Chico and Northern California. My focus is on delivering
-              reliable IT repair, smart home integrations, and network solutions for
-              both businesses and consumers. I also work with subcontracting platforms
-              like Field Nation and WorkMarket, gaining consistent project experience.
-            </p>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur">
-            <h3 className="text-xl font-semibold text-white">Academic Focus</h3>
-            <p className="mt-2 text-neutral-300">
-              At Chico State, I’m studying Computer Science with an emphasis on
-              algorithms, networking, cloud technologies, and systems design. My
-              projects range from encryption algorithms to cloud deployments using
-              Docker and Kubernetes, as well as hands‑on assignments in C++, Python,
-              and functional programming.
-            </p>
-          </div>
-          <div className="rounded-xl border border-white/10 bg-white/[0.02] p-6 backdrop-blur">
-            <h3 className="text-xl font-semibold text-white">Beyond Tech</h3>
-            <p className="mt-2 text-neutral-300">
-              When I’m not working on IT projects or coursework, I enjoy weightlifting,
-              fishing, snowboarding, and playing guitar. These activities keep me
-              balanced and fuel my creativity, which I bring back into my professional
-              and academic work.
+              Through Blue Arc Networks, I provide comprehensive IT services across Chico and Northern California. My focus is on delivering reliable IT repair, network solutions, and smart technology integrations for businesses and consumers. I also partner with subcontracting platforms like Field Nation and WorkMarket, building a strong track record of successful projects.
             </p>
           </div>
         </div>
