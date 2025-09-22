@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
 
 // -----------------------------
 // Types
@@ -157,30 +157,28 @@ export default function Gallery({ items = JOBS }: { items?: JobItem[] }) {
 
   const closeLightbox = () => setLightbox(null);
 
-  const nextMedia = () => {
+  const nextMedia = useCallback(() => {
     if (!currentItem || !lightbox) return;
     const nextIndex = lightbox.index + 1;
     if (nextIndex < currentItem.media.length) {
       setLightbox({ id: lightbox.id, index: nextIndex });
     } else {
-      // move to first media of next item
       const nextItem = (currentItemIndex + 1) % filtered.length;
       setLightbox({ id: filtered[nextItem].id, index: 0 });
     }
-  };
+  }, [currentItem, lightbox, currentItemIndex, filtered]);
 
-  const prevMedia = () => {
+  const prevMedia = useCallback(() => {
     if (!currentItem || !lightbox) return;
     const prevIndex = lightbox.index - 1;
     if (prevIndex >= 0) {
       setLightbox({ id: lightbox.id, index: prevIndex });
     } else {
-      // move to last media of previous item
       const prevItem = (currentItemIndex - 1 + filtered.length) % filtered.length;
       const lastIndex = filtered[prevItem].media.length - 1;
       setLightbox({ id: filtered[prevItem].id, index: Math.max(0, lastIndex) });
     }
-  };
+  }, [currentItem, lightbox, currentItemIndex, filtered]);
 
   // Close on Escape
   const escRef = useRef(closeLightbox);
@@ -263,7 +261,7 @@ export default function Gallery({ items = JOBS }: { items?: JobItem[] }) {
                   return (
                     <button onClick={open} className="relative block w-full overflow-hidden" aria-label={`Open ${item.title}`}>
                       <img
-                        src={("thumb" in first && first.thumb) ? (first as any).thumb : first.src}
+                        src={first.thumb ?? first.src}
                         alt={first.alt}
                         className="h-56 w-full object-cover transition group-hover:scale-[1.02]"
                         loading="lazy"
@@ -377,7 +375,7 @@ export default function Gallery({ items = JOBS }: { items?: JobItem[] }) {
                   >
                     {m.type === "image" ? (
                       <img
-                        src={("thumb" in m && m.thumb) ? m.thumb : m.src}
+                        src={m.type === "image" && m.thumb ? m.thumb : m.src}
                         alt={m.alt}
                         className="h-14 w-20 object-cover"
                         loading="lazy"
