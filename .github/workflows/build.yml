@@ -30,11 +30,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build (Next 15, output: export)
+      - name: "Build (Next 15, output: export)"
         env:
-          NEXT_DISABLE_ESLINT: 1
-        run: |
-          npx next build
+          NEXT_DISABLE_ESLINT: "1"
+        run: npx next build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
