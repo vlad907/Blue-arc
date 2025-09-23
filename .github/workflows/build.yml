@@ -33,6 +33,8 @@ jobs:
       - name: "Build (Next 15, output: export)"
         env:
           NEXT_DISABLE_ESLINT: "1"
+          BASE_PATH: ${{ vars.BASE_PATH || '' }}
+          NEXT_PUBLIC_BASE_PATH: ${{ vars.BASE_PATH || '' }}
         run: npx next build
 
       - name: Upload Pages artifact

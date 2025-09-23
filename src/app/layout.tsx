@@ -2,14 +2,18 @@ import "./globals.css";
 import NavBar from "@/components/NavBar";
 import Hero from "@/components/Hero";
 import Services from "@/components/services";
-import Trustedby from "@/components/trustedby"
-import Contact from "@/components/Contact"
-import About from "@/components/About"
-import Pricing from "@/components/Pricing"
+import Trustedby from "@/components/trustedby";
+import Contact from "@/components/Contact";
+import About from "@/components/About";
+import Pricing from "@/components/Pricing";
 import Footer from "@/components/Footer";
-import Jobs from "@/components/gallery"
+import Jobs from "@/components/gallery";
+import { assetPath } from "@/lib/asset-path";
+import type { Metadata } from "next";
 
-export const metadata = {
+const iconSrc = assetPath("/logos/Blue-arc.png");
+
+export const metadata: Metadata = {
   title: "Blue Arc Networks – Reliable IT Help",
   description: "Professional IT support, networking, and computer repair services serving Chico and Northern California.",
   keywords: [
@@ -29,7 +33,7 @@ export const metadata = {
     siteName: "Blue Arc Networks",
     images: [
       {
-        url: "/logos/Blue-arc.png",
+        url: iconSrc,
         width: 1200,
         height: 630,
         alt: "Blue Arc Networks Logo",
@@ -39,7 +43,7 @@ export const metadata = {
     type: "website",
   },
   icons: {
-    icon: "/logos/Blue-arc.png",
+    icon: iconSrc,
   },
 };
 

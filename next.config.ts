@@ -1,6 +1,16 @@
 import type { NextConfig } from "next";
 
-const BASE_PATH = "/Blue-arc";
+const normalizeBasePath = (value?: string | null) => {
+  if (!value) return "";
+  const trimmed = value.trim();
+  if (!trimmed || trimmed === "/") return "";
+  const leading = trimmed.startsWith("/") ? trimmed : `/${trimmed}`;
+  return leading.replace(/\/+$/, "");
+};
+
+const BASE_PATH =
+  normalizeBasePath(process.env.NEXT_PUBLIC_BASE_PATH) ||
+  normalizeBasePath(process.env.BASE_PATH);
 
 const nextConfig: NextConfig = {
   output: "export",             // Required for static export
@@ -8,10 +18,14 @@ const nextConfig: NextConfig = {
     unoptimized: true,          // Disable image optimizer for GitHub Pages
   },
   trailingSlash: true,          // Ensures proper routing on Pages
-  basePath: BASE_PATH,
-  assetPrefix: `${BASE_PATH}/`,
+  ...(BASE_PATH
+    ? {
+        basePath: BASE_PATH,
+        assetPrefix: `${BASE_PATH}/`,
+      }
+    : {}),
   env: {
-    NEXT_PUBLIC_BASE_PATH: BASE_PATH,
+    NEXT_PUBLIC_BASE_PATH: BASE_PATH ?? "",
   },
 };
 
