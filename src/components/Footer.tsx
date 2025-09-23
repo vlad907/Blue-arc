@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
+import { assetPath } from "@/lib/asset-path";
 
 
 const Footer = () => {
@@ -40,7 +41,7 @@ const Footer = () => {
         <div className="grid gap-16 sm:grid-cols-2 lg:grid-cols-4 text-base sm:text-sm">
           <div>
             <Image
-            src="/logos/Blue-arc-networks.png"
+            src={assetPath("/logos/Blue-arc-networks.png")}
             alt="Blue Arc Networks"
             width={256}   // pick real intrinsic size
             height={64}   // keep aspect ratio correct

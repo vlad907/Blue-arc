@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import { assetPath } from "@/lib/asset-path";
 
 // -----------------------------
 // Types
@@ -261,7 +262,7 @@ export default function Gallery({ items = JOBS }: { items?: JobItem[] }) {
                   return (
                     <button onClick={open} className="relative block w-full overflow-hidden" aria-label={`Open ${item.title}`}>
                       <img
-                        src={first.thumb ?? first.src}
+                        src={assetPath(first.thumb ?? first.src)}
                         alt={first.alt}
                         className="h-56 w-full object-cover transition group-hover:scale-[1.02]"
                         loading="lazy"
@@ -333,14 +334,14 @@ export default function Gallery({ items = JOBS }: { items?: JobItem[] }) {
           <figure className="max-h-[85vh] w-full max-w-5xl">
             {currentMedia.type === "image" ? (
               <img
-                src={currentMedia.src}
+                src={assetPath(currentMedia.src)}
                 alt={currentMedia.alt}
                 className="max-h-[85vh] w-full rounded-lg object-contain"
               />
             ) : (
               <video
-                src={currentMedia.src}
-                poster={"poster" in currentMedia ? currentMedia.poster : undefined}
+                src={assetPath(currentMedia.src)}
+                poster={"poster" in currentMedia && currentMedia.poster ? assetPath(currentMedia.poster) : undefined}
                 controls
                 playsInline
                 preload="metadata"
@@ -375,7 +376,7 @@ export default function Gallery({ items = JOBS }: { items?: JobItem[] }) {
                   >
                     {m.type === "image" ? (
                       <img
-                        src={m.type === "image" && m.thumb ? m.thumb : m.src}
+                        src={assetPath(m.type === "image" && m.thumb ? m.thumb : m.src)}
                         alt={m.alt}
                         className="h-14 w-20 object-cover"
                         loading="lazy"

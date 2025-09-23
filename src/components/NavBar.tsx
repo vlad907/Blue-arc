@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { assetPath } from "@/lib/asset-path";
 
 export default function NavBar() {
   const [activeId, setActiveId] = useState<string>("home");
@@ -86,7 +87,7 @@ export default function NavBar() {
       <div className="max-w-screen-xl flex flex-nowrap items-center justify-between mx-auto p-4">
         <a href="#home" className="flex items-center space-x-3 rtl:space-x-reverse">
           <Image
-          src="/logos/Blue-arc.png"
+          src={assetPath("/logos/Blue-arc.png")}
           alt="Blue Arc Logo"
           width={160}   // adjust to your logo's real size
           height={64}

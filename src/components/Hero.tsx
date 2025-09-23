@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { assetPath } from "@/lib/asset-path";
 
 /**
  * Hero with lightweight background video overlay.
@@ -52,7 +53,7 @@ export default function Hero() {
           ref={videoRef}
           className="h-full w-full object-cover"
           // Place your files in /public as /hero.mp4 and /hero.webm
-          poster="/hero-poster.jpg"
+          poster={assetPath("/hero-poster.jpg")}
           muted
           loop
           playsInline
@@ -70,8 +71,8 @@ export default function Hero() {
           }}
         >
           {/* Provide multiple sources and ensure absolute paths from /public */}
-          <source src="/hero.webm" type="video/webm" />
-          <source src="/hero.mp4" type="video/mp4" />
+          <source src={assetPath("/hero.webm")} type="video/webm" />
+          <source src={assetPath("/hero.mp4")} type="video/mp4" />
         </video>
         {/* Overlay gradient to increase text contrast */}
         <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/70 via-neutral-950/30 to-neutral-950/40" />
