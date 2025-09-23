@@ -28,6 +28,26 @@ export default function TrustedBy({
   subtitle = "A few of the teams we support and keep online",
 }: Props) {
   const parallaxRef = useRef<HTMLDivElement | null>(null);
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
+  const resolveLogoSrc = (src: string) => {
+    if (/^(?:https?:)?\/\//.test(src)) {
+      return src;
+    }
+
+    const normalized = src.startsWith("/") ? src : `/${src}`;
+
+    if (!basePath) {
+      return normalized;
+    }
+
+    if (normalized.startsWith(`${basePath}/`)) {
+      return normalized;
+    }
+
+    return `${basePath}${normalized}`;
+  };
+
   useEffect(() => {
     const root = parallaxRef.current;
     if (!root) return;
@@ -171,7 +191,7 @@ export default function TrustedBy({
                 <div className="group flex flex-col items-center rounded-xl border border-white/10 bg-white/10 backdrop-blur-md p-4 sm:p-5 hover:border-white/20 transition">
                   <div className="relative flex h-12 sm:h-14 w-full items-center justify-center">
                     <img
-                      src={item.src}
+                      src={resolveLogoSrc(item.src)}
                       alt={item.name}
                       loading="lazy"
                       className={(item.className ? item.className + " " : "") + "max-h-full max-w-[160px] object-contain opacity-90 group-hover:opacity-100 transition"}
@@ -185,7 +205,7 @@ export default function TrustedBy({
                 <div className="group flex flex-col items-center rounded-xl border border-white/10 bg-white/10 backdrop-blur-md p-4 sm:p-5 hover:border-white/20 transition">
                   <div className="relative flex h-12 sm:h-14 w-full items-center justify-center">
                     <img
-                      src={item.src}
+                      src={resolveLogoSrc(item.src)}
                       alt={item.name}
                       loading="lazy"
                       className={(item.className ? item.className + " " : "") + "max-h-full max-w-[160px] object-contain opacity-90 group-hover:opacity-100 transition"}
