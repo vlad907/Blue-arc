@@ -58,7 +58,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Trustedby />
         <Contact />
         <Pricing />
-        <Jobs/>
         <Footer />
         <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
       </body>
