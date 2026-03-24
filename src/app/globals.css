@@ -35,4 +35,31 @@
     .animate-float-fast,
     .animate-float-fast-2 { animation: none !important; }
   }
+
+  @keyframes hero-fade-up {
+    from {
+      opacity: 0;
+      transform: translate3d(0, 12px, 0);
+    }
+    to {
+      opacity: 1;
+      transform: translate3d(0, 0, 0);
+    }
+  }
+
+  .hero-animate-in {
+    opacity: 0;
+    animation: hero-fade-up 0.55s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  .hero-animate-delay-1 { animation-delay: 0.07s; }
+  .hero-animate-delay-2 { animation-delay: 0.14s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-animate-in {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
 }

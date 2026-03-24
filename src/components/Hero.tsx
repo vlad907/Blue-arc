@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { assetPath } from "@/lib/asset-path";
 
@@ -12,8 +13,8 @@ const VIDEO_SOURCES: { src: string; start: number; end: number }[] = [
 ];
 
 /**
- * Hero with lightweight background video overlay.
- * Plays three 2-second clips in sequence with crossfade transitions.
+ * Hero: background (z-0) → overlay (z-10) → content (z-20).
+ * Overlay never stacks above text; no opacity on the content wrapper.
  */
 export default function Hero() {
   const video0Ref = useRef<HTMLVideoElement | null>(null);
@@ -108,9 +109,13 @@ export default function Hero() {
   }, [activeIndex]);
 
   return (
-    <section id="home" ref={sectionRef} className="relative isolate overflow-hidden bg-neutral-950 min-h-[70vh] sm:min-h-[75vh] lg:min-h-[88vh]">
-      {/* Background video layer - two videos for crossfade */}
-      <div className="absolute inset-0">
+    <section
+      id="home"
+      ref={sectionRef}
+      className="relative isolate flex min-h-[70vh] flex-col overflow-hidden bg-neutral-950 sm:min-h-[75vh] lg:min-h-[88vh]"
+    >
+      {/* Layer 1: background video only (z-0) */}
+      <div className="absolute inset-0 z-0">
         {[0, 1].map((i) => (
           <video
             key={i}
@@ -119,7 +124,7 @@ export default function Hero() {
             style={{
               transitionDuration: `${FADE_DURATION_MS}ms`,
               opacity: activeIndex === i ? 1 : 0,
-              zIndex: activeIndex === i ? 10 : 0,
+              zIndex: activeIndex === i ? 1 : 0,
             }}
             poster={i === 0 ? assetPath("/hero-poster.jpg") : undefined}
             muted
@@ -138,72 +143,87 @@ export default function Hero() {
             }}
           />
         ))}
-        {/* Gradient overlay — darken background for readability */}
+      </div>
+
+      {/* Layer 2: darkening — only covers video; pointer-events none (z-10) */}
+      <div className="pointer-events-none absolute inset-0 z-10" aria-hidden>
+        <div className="absolute inset-0 bg-black/45" />
         <div
-          className="pointer-events-none absolute inset-0 z-20"
+          className="absolute inset-0"
           style={{
-            background: "linear-gradient(90deg, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.3) 100%)",
+            background:
+              "radial-gradient(ellipse 95% 85% at 50% 42%, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.35) 52%, rgba(0,0,0,0.25) 100%)",
           }}
         />
-        <div className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/55 via-transparent to-black/35" />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 42%, rgba(0,0,0,0.35) 100%)",
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
       </div>
 
-      {/* Content — light glass card, pure white text */}
-      <div className="relative z-10 mx-auto max-w-6xl px-4 py-20 sm:py-24 lg:py-28 text-white flex flex-col justify-center min-h-[65vh]">
-        <div className="max-w-3xl rounded-2xl border border-white/15 bg-black/65 px-6 py-8 shadow-xl backdrop-blur-md sm:px-8 sm:py-10">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
-            Blue Arc <span className="text-blue-400">Networks</span>
-          </h1>
-          <p className="mt-5 max-w-none text-lg sm:text-xl text-white leading-loose font-medium">
-            Reliable IT, networking, cabling, and surveillance for Chico businesses. Onsite infrastructure, Wi-Fi, low-voltage, and technical support across Northern California.
+      {/* Layer 3: content — above overlay; no wrapper opacity / no backdrop on container (z-20) */}
+      <div className="relative z-20 flex min-h-0 flex-1 flex-col items-center justify-center px-4 pb-20 pt-24 sm:pb-24 sm:pt-28 lg:pb-28 lg:pt-32">
+        <div className="mx-auto max-w-3xl text-center">
+          <div className="hero-animate-in flex flex-col items-center gap-4 sm:gap-5">
+            <Image
+              src={assetPath("/logos/Blue-arc.png")}
+              alt=""
+              width={200}
+              height={80}
+              className="h-16 w-auto sm:h-20 md:h-24"
+              priority
+            />
+            <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl">
+              Blue Arc <span className="text-blue-600 dark:text-blue-400">Networks</span>
+            </h1>
+          </div>
+          <p className="hero-animate-in hero-animate-delay-1 mx-auto mt-8 max-w-xl text-base font-medium leading-relaxed text-neutral-200 sm:mt-10 sm:text-lg">
+            Reliable onsite IT and infrastructure for Chico businesses.
           </p>
-          <p className="mt-4 text-sm sm:text-base text-neutral-100 leading-relaxed">
-            Based in Chico, serving Northern California for onsite IT, network infrastructure, low-voltage, and field service work.
-          </p>
+          <div className="hero-animate-in hero-animate-delay-2 mt-10 flex flex-col items-stretch justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">
+            <a
+              href="#contact"
+              className="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-blue-500 px-8 py-3 text-center text-base font-semibold text-white shadow-lg shadow-black/40 transition hover:bg-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+            >
+              Get a Quote
+            </a>
+            <a
+              href="#ourwork"
+              className="inline-flex min-h-[48px] items-center justify-center rounded-lg border border-white/35 bg-white/10 px-8 py-3 text-center text-base font-semibold text-white transition hover:border-white/55 hover:bg-white/18 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/45 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
+            >
+              View Our Work
+            </a>
+          </div>
         </div>
-        <div className="mt-8 flex flex-col sm:flex-row flex-wrap gap-4 w-full max-w-lg">
-          <a
-            href="#contact"
-            className="inline-flex w-full sm:w-auto items-center justify-center rounded-md bg-blue-600 px-6 py-3 text-white font-semibold shadow-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 transition"
+
+        <button
+          type="button"
+          aria-label="Scroll to next section"
+          onClick={() => {
+            const sect = sectionRef.current;
+            if (!sect) return;
+            const next = sect.nextElementSibling as HTMLElement | null;
+            if (next) {
+              next.scrollIntoView({ behavior: "smooth", block: "start" });
+            }
+          }}
+          className="group absolute bottom-6 left-1/2 inline-flex h-11 w-11 -translate-x-1/2 items-center justify-center rounded-full border border-white/25 bg-neutral-900/90 text-white transition hover:border-white/45 hover:bg-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 sm:bottom-8"
+        >
+          <svg
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-5 w-5 transition-transform group-hover:translate-y-0.5"
+            aria-hidden="true"
+            fill="currentColor"
           >
-            Request Service
-          </a>
-          <a
-            href="#services"
-            className="inline-flex w-full sm:w-auto items-center justify-center rounded-md border border-white/20 bg-black/55 px-6 py-3 font-semibold text-white backdrop-blur-sm hover:bg-black/65 focus:outline-none focus:ring-2 focus:ring-white/40 focus:ring-offset-2 transition"
-          >
-            View Services
-          </a>
-          <a
-            href="#ourwork"
-            className="inline-flex w-full sm:w-auto items-center justify-center rounded-md border border-white/20 bg-black/55 px-6 py-3 font-semibold text-white backdrop-blur-sm hover:bg-black/65 focus:outline-none focus:ring-2 focus:ring-white/40 focus:ring-offset-2 transition"
-          >
-            View Our Work
-          </a>
-        </div>
+            <path d="M12 16a1 1 0 0 1-.707-.293l-6-6a1 1 0 1 1 1.414-1.414L12 13.586l5.293-5.293a1 1 0 0 1 1.414 1.414l-6 6A1 1 0 0 1 12 16z" />
+          </svg>
+        </button>
       </div>
-
-      {/* Scroll to next section button */}
-      <button
-        type="button"
-        aria-label="Scroll to next section"
-        onClick={() => {
-          const sect = sectionRef.current;
-          if (!sect) return;
-          const next = sect.nextElementSibling as HTMLElement | null;
-          if (next) {
-            next.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
-        }}
-        className="group absolute z-20 left-1/2 -translate-x-1/2 bottom-6 sm:bottom-8 inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/55 backdrop-blur-md hover:bg-black/65 focus:outline-none focus:ring-2 focus:ring-white/50"
-      >
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white transition-transform group-hover:translate-y-0.5" aria-hidden="true">
-          <path fill="currentColor" d="M12 16a1 1 0 0 1-.707-.293l-6-6a1 1 0 1 1 1.414-1.414L12 13.586l5.293-5.293a1 1 0 0 1 1.414 1.414l-6 6A1 1 0 0 1 12 16z"/>
-        </svg>
-      </button>
-
-      {/* Bottom shape divider */}
-      
     </section>
   );
 }
