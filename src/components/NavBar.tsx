@@ -53,7 +53,7 @@ export default function NavBar() {
     setTimeout(onLoadHash, 0);
     window.addEventListener('hashchange', onHashChange);
 
-    const sections = ["home", "services", "about", "trustedby", "contact", "pricing", "gallery", "footer"];
+    const sections = ["home", "services", "ourwork", "about", "trustedby", "contact", "footer"];
     const onScrollSpy = () => {
       let current = "home";
       for (const id of sections) {
@@ -150,6 +150,16 @@ export default function NavBar() {
             </li>
             <li>
               <a
+                href="#ourwork"
+                className={`block px-4 py-3 md:px-0 md:py-2 ${
+                  activeId === "ourwork" ? "text-blue-400 font-semibold" : "text-white/80 hover:text-white"
+                }`}
+              >
+                Our Work
+              </a>
+            </li>
+            <li>
+              <a
                 href="#about"
                 className={`block px-4 py-3 md:px-0 md:py-2 ${
                   activeId === "about"
@@ -170,28 +180,6 @@ export default function NavBar() {
                 }`}
               >
                 Contact
-              </a>
-            </li>
-            <li>
-              <a
-                href="#pricing"
-                className={`block px-4 py-3 md:px-0 md:py-2 ${
-                  activeId === "pricing"
-                    ? "text-blue-400 font-semibold"
-                    : "text-white/80 hover:text-white"
-                }`}
-              >
-                Pricing
-              </a>
-            </li>
-            <li>
-              <a
-                href="#gallery"
-                className={`block px-4 py-3 md:px-0 md:py-2 ${
-                  activeId === "gallery" ? "text-blue-400 font-semibold" : "text-white/80 hover:text-white"
-                }`}
-              >
-                Gallery
               </a>
             </li>
             <li>

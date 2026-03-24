@@ -1,0 +1,106 @@
+[
+  {
+    "id": "network-rack-install-at-primo-water-mn459d3g",
+    "title": "Network rack install at Primo Water",
+    "description": "installed a wall mounted network rack at primo water to remove old prexisting rack that was floor mounted that took up a significant amount of space.",
+    "category": "rack",
+    "images": [
+      "/projects/rack/network-rack-install-at-primo-water-mn459d3g-0.jpg",
+      "/projects/rack/network-rack-install-at-primo-water-mn459d3g-1.jpg",
+      "/projects/rack/network-rack-install-at-primo-water-mn459d3g-2.jpg",
+      "/projects/rack/network-rack-install-at-primo-water-mn459d3g-3.jpg",
+      "/projects/rack/network-rack-install-at-primo-water-mn459d3g-4.jpg"
+    ]
+  },
+  {
+    "id": "ip-camera-replacement-at-target-mn45sb7h",
+    "title": "IP camera replacement at Target",
+    "description": "Replaced IP cameras for one of surveilance camera domes at Target due to wataer protrusion,",
+    "category": "cameras",
+    "images": [
+      "/projects/cameras/ip-camera-replacement-at-target-mn45sb7h-0.jpg"
+    ]
+  },
+  {
+    "id": "pvm-and-ip-camera-install-at-new-burlington-location-mn45ussv",
+    "title": "PVM and IP camera install at new Burlington location",
+    "description": "Installed 10 IP cameras and 13 PVMs",
+    "category": "cameras",
+    "images": [
+      "/projects/cameras/pvm-and-ip-camera-install-at-new-burlington-location-mn45ussv-0.jpg",
+      "/projects/cameras/pvm-and-ip-camera-install-at-new-burlington-location-mn45ussv-1.jpg",
+      "/projects/cameras/pvm-and-ip-camera-install-at-new-burlington-location-mn45ussv-2.jpg",
+      "/projects/cameras/pvm-and-ip-camera-install-at-new-burlington-location-mn45ussv-3.jpg",
+      "/projects/cameras/pvm-and-ip-camera-install-at-new-burlington-location-mn45ussv-4.jpg",
+      "/projects/cameras/pvm-and-ip-camera-install-at-new-burlington-location-mn45ussv-5.jpg"
+    ]
+  },
+  {
+    "id": "new-data-drops-for-primo-water-mn45whc6",
+    "title": "New Data drops for Primo water",
+    "description": "Ran 4 new data drops for Primo water due to pre existing runs had damaged cabling.",
+    "category": "cabling",
+    "images": [
+      "/projects/cabling/new-data-drops-for-primo-water-mn45whc6-0.jpg",
+      "/projects/cabling/new-data-drops-for-primo-water-mn45whc6-1.jpg",
+      "/projects/cabling/new-data-drops-for-primo-water-mn45whc6-2.jpg",
+      "/projects/cabling/new-data-drops-for-primo-water-mn45whc6-3.jpg",
+      "/projects/cabling/new-data-drops-for-primo-water-mn45whc6-4.jpg",
+      "/projects/cabling/new-data-drops-for-primo-water-mn45whc6-5.jpg",
+      "/projects/cabling/new-data-drops-for-primo-water-mn45whc6-6.jpg"
+    ]
+  },
+  {
+    "id": "wisp-installation-mn45xt1z",
+    "title": "WISP installation",
+    "description": "Installed two wisp services (t-mobile & verizon) so clients can have a reliable WAN failover.",
+    "category": "network",
+    "images": [
+      "/projects/network/wisp-installation-mn45xt1z-0.jpg",
+      "/projects/network/wisp-installation-mn45xt1z-1.jpg"
+    ]
+  },
+  {
+    "id": "16-ap-deployment-mn4613f4",
+    "title": "16 ap deployment",
+    "description": "Installed 16 APs in a two story retirement home which required about 2,000ft total in cable runs.",
+    "category": "cabling",
+    "images": [
+      "/projects/cabling/16-ap-deployment-mn4613f4-0.jpg",
+      "/projects/cabling/16-ap-deployment-mn4613f4-1.jpg",
+      "/projects/cabling/16-ap-deployment-mn4613f4-2.jpg",
+      "/projects/cabling/16-ap-deployment-mn4613f4-3.jpg",
+      "/projects/cabling/16-ap-deployment-mn4613f4-4.jpg",
+      "/projects/cabling/16-ap-deployment-mn4613f4-5.jpg",
+      "/projects/cabling/16-ap-deployment-mn4613f4-6.jpg",
+      "/projects/cabling/16-ap-deployment-mn4613f4-7.jpg",
+      "/projects/cabling/16-ap-deployment-mn4613f4-8.jpg",
+      "/projects/cabling/16-ap-deployment-mn4613f4-9.jpg",
+      "/projects/cabling/16-ap-deployment-mn4613f4-10.jpg"
+    ]
+  },
+  {
+    "id": "ip-camera-install-jcpenny-mn463d9r",
+    "title": "IP camera Install JCpenny",
+    "description": "",
+    "category": "cameras",
+    "images": [
+      "/projects/cameras/ip-camera-install-jcpenny-mn463d9r-0.jpg",
+      "/projects/cameras/ip-camera-install-jcpenny-mn463d9r-1.jpg",
+      "/projects/cameras/ip-camera-install-jcpenny-mn463d9r-2.jpg",
+      "/projects/cameras/ip-camera-install-jcpenny-mn463d9r-3.jpg",
+      "/projects/cameras/ip-camera-install-jcpenny-mn463d9r-4.jpg"
+    ]
+  },
+  {
+    "id": "p2p-radio-install-mn4662s7",
+    "title": "P2P radio install",
+    "description": "Installed a new mount for P2P radios and re aimed them for better connectivity. Client was having issues with P2P radio due to pre existing mount wobbling dure high winds.",
+    "category": "cameras",
+    "images": [
+      "/projects/cameras/p2p-radio-install-mn4662s7-0.jpg",
+      "/projects/cameras/p2p-radio-install-mn4662s7-1.jpg",
+      "/projects/cameras/p2p-radio-install-mn4662s7-2.jpg"
+    ]
+  }
+]

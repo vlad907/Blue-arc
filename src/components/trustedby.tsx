@@ -10,6 +10,7 @@ export type TrustedLogo = {
 };
 
 type Props = {
+  logos?: TrustedLogo[];
   title?: string;
   subtitle?: string;
 };
@@ -25,8 +26,9 @@ type Props = {
  */
 
 export default function TrustedBy({
+  logos: logosProp,
   title = "Trusted By",
-  subtitle = "A few of the teams we support and keep online",
+  subtitle = "Teams and businesses we've supported through direct service and field deployments.",
 }: Props) {
   const parallaxRef = useRef<HTMLDivElement | null>(null);
 
@@ -48,13 +50,16 @@ export default function TrustedBy({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const logos: TrustedLogo[] = [
-    { name: "Pour House", src: "/logos/PourHouse.png" },
-    { name: "Schuster Homes", src: "/logos/schuster-homes.png" },
-    { name: "COMP", src: "/logos/complogo.avif" },
-    { name: "Snider Services", src: "logos/imgl-ss-footer.jpg"},
-    { name: "NCR Voyix", src: "logos/ncr_voyix.svg"},
-  ];
+  const logos: TrustedLogo[] =
+    logosProp && logosProp.length > 0
+      ? logosProp
+      : [
+          { name: "Pour House", src: "/logos/PourHouse.png" },
+          { name: "Schuster Homes", src: "/logos/schuster-homes.png" },
+          { name: "COMP", src: "/logos/complogo.avif" },
+          { name: "Snider Services", src: "/logos/imgl-ss-footer.jpg" },
+          { name: "NCR Voyix", src: "/logos/ncr_voyix.svg" },
+        ];
 
   return (
     <section id="trustedby" className="relative isolate bg-neutral-950 py-12 sm:py-16">
@@ -166,17 +171,17 @@ export default function TrustedBy({
         </div>
 
         {/* Grid of logos */}
-        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8">
+        <div className="mt-8 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6 sm:gap-8 items-stretch">
           {logos.map((item: TrustedLogo) => (
             item.href ? (
               <a key={item.name} href={item.href} target="_blank" rel="noreferrer noopener">
-                <div className="group flex flex-col items-center rounded-xl border border-white/10 bg-white/10 backdrop-blur-md p-4 sm:p-5 hover:border-white/20 transition">
-                  <div className="relative flex h-12 sm:h-14 w-full items-center justify-center">
+                <div className="group flex h-full flex-col items-center justify-center rounded-xl border border-white/10 bg-white/10 backdrop-blur-md p-4 sm:p-5 hover:border-white/20 transition min-h-[120px]">
+                  <div className="relative flex h-12 sm:h-14 w-full min-h-[48px] items-center justify-center shrink-0">
                     <img
                       src={assetPath(item.src)}
-                      alt={item.name}
+                      alt={`${item.name} logo`}
                       loading="lazy"
-                      className={(item.className ? item.className + " " : "") + "max-h-full max-w-[160px] object-contain opacity-90 group-hover:opacity-100 transition"}
+                      className={(item.className ? item.className + " " : "") + "max-h-12 sm:max-h-14 max-w-[140px] w-auto object-contain opacity-90 group-hover:opacity-100 transition"}
                     />
                   </div>
                   <div className="mt-3 text-center text-sm font-medium text-neutral-200/95">{item.name}</div>
@@ -184,13 +189,13 @@ export default function TrustedBy({
               </a>
             ) : (
               <div key={item.name}>
-                <div className="group flex flex-col items-center rounded-xl border border-white/10 bg-white/10 backdrop-blur-md p-4 sm:p-5 hover:border-white/20 transition">
-                  <div className="relative flex h-12 sm:h-14 w-full items-center justify-center">
+                <div className="group flex h-full flex-col items-center justify-center rounded-xl border border-white/10 bg-white/10 backdrop-blur-md p-4 sm:p-5 hover:border-white/20 transition min-h-[120px]">
+                  <div className="relative flex h-12 sm:h-14 w-full min-h-[48px] items-center justify-center shrink-0">
                     <img
                       src={assetPath(item.src)}
-                      alt={item.name}
+                      alt={`${item.name} logo`}
                       loading="lazy"
-                      className={(item.className ? item.className + " " : "") + "max-h-full max-w-[160px] object-contain opacity-90 group-hover:opacity-100 transition"}
+                      className={(item.className ? item.className + " " : "") + "max-h-12 sm:max-h-14 max-w-[140px] w-auto object-contain opacity-90 group-hover:opacity-100 transition"}
                     />
                   </div>
                   <div className="mt-3 text-center text-sm font-medium text-neutral-200/95">{item.name}</div>

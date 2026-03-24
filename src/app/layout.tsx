@@ -1,34 +1,26 @@
 import "./globals.css";
-import NavBar from "@/components/NavBar";
-import Hero from "@/components/Hero";
-import Services from "@/components/services";
-import Trustedby from "@/components/trustedby";
-import Contact from "@/components/Contact";
-import About from "@/components/About";
-import Pricing from "@/components/Pricing";
-import Footer from "@/components/Footer";
-import Jobs from "@/components/gallery";
 import { assetPath } from "@/lib/asset-path";
 import type { Metadata } from "next";
 
 const iconSrc = assetPath("/logos/Blue-arc.png");
 
 export const metadata: Metadata = {
-  title: "Blue Arc Networks – Reliable IT Help",
-  description: "Professional IT support, networking, and computer repair services serving Chico and Northern California.",
+  title: "Blue Arc Networks – IT Support, Networking & Surveillance | Chico, CA",
+  description: "Professional IT support, network installation, structured cabling, and surveillance systems for businesses in Chico and Northern California.",
   keywords: [
-    "IT support",
-    "computer repair",
-    "networking",
-    "server setup",
-    "Wi-Fi troubleshooting",
+    "Chico IT support",
+    "Chico network installation",
+    "structured cabling Chico",
+    "surveillance camera installation Chico",
+    "business Wi-Fi setup Northern California",
     "Blue Arc Networks",
-    "Chico California IT"
+    "low-voltage installation",
+    "onsite IT support",
   ],
   authors: [{ name: "Blue Arc Networks" }],
   openGraph: {
-    title: "Blue Arc Networks – Reliable IT Help",
-    description: "Serving Chico and Northern California with IT support, networking, and repair.",
+    title: "Blue Arc Networks – IT, Networking & Surveillance for Chico Businesses",
+    description: "Professional IT support, networking, cabling, and surveillance for businesses across Chico and Northern California.",
     url: "https://bluearcnetworks.tech",
     siteName: "Blue Arc Networks",
     images: [
@@ -36,7 +28,7 @@ export const metadata: Metadata = {
         url: iconSrc,
         width: 1200,
         height: 630,
-        alt: "Blue Arc Networks Logo",
+        alt: "Blue Arc Networks – IT support and networking in Chico, CA",
       },
     ],
     locale: "en_US",
@@ -50,17 +42,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className="bg-neutral-950 text-neutral-100">
-        <NavBar />
-        <Hero />
-        <Services />
-        <About />
-        <Trustedby />
-        <Contact />
-        <Pricing />
-        <Footer />
-        <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
-      </body>
+      <body className="bg-neutral-950 text-neutral-100">{children}</body>
     </html>
   );
 }

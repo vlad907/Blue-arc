@@ -7,8 +7,8 @@ type Props = {
 };
 
 const Contact: React.FC<Props> = ({
-  title = "Serving Chico and Northern California with Reliable IT Help",
-  subtitle = "Tell us what you need help with. We’ll reply quickly.",
+  title = "Get in Touch",
+  subtitle = "Need help with IT support, Wi-Fi, surveillance cameras, structured cabling, or technical installations? Tell us about your project.",
 }) => {
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState<string>("");
@@ -108,12 +108,9 @@ const Contact: React.FC<Props> = ({
               </li>
             </ul>
 
-            <a
-              href="#pricing"
-              className="mt-6 inline-flex items-center justify-center rounded-lg border border-sky-400/30 bg-sky-500/10 px-4 py-2 text-sm font-medium text-sky-200 hover:bg-sky-500/20 focus:outline-none focus:ring-2 focus:ring-sky-400/40"
-            >
-              Pricing
-            </a>
+            <p className="mt-6 text-sm text-neutral-400">
+              Transparent service pricing. Project-based estimates available. Onsite service and travel quoted based on scope and location.
+            </p>
 
             {/* Map */}
             <div className="mt-8 overflow-hidden rounded-xl border border-white/10">
@@ -181,14 +178,15 @@ const Contact: React.FC<Props> = ({
                   id="service"
                   name="service"
                   className="mt-1 w-full rounded-lg border border-white/10 bg-neutral-900 px-3 py-2 text-white focus:border-sky-500/50 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
-                  defaultValue="General Question"
+                  defaultValue="General Inquiry"
                 >
-                  <option>General Question</option>
-                  <option>Computer Repair</option>
-                  <option>Networking &amp; Wi‑Fi</option>
-                  <option>Server &amp; AD Setup</option>
-                  <option>Security Cameras / AV</option>
-                  <option>Other</option>
+                  <option>General Inquiry</option>
+                  <option>Managed IT &amp; Computer Support</option>
+                  <option>Network Design &amp; Wi-Fi Solutions</option>
+                  <option>Server &amp; Infrastructure Support</option>
+                  <option>Surveillance Systems</option>
+                  <option>Structured Cabling</option>
+                  <option>Audio / Video &amp; Smart Systems</option>
                 </select>
               </div>
               <div className="sm:col-span-2">

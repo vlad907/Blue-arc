@@ -1,6 +1,6 @@
 import React from "react";
 
-const Icon = ({ name }: { name: "computer" | "wifi" | "server" | "camera" }) => {
+const Icon = ({ name }: { name: "computer" | "wifi" | "server" | "camera" | "cabling" | "av" }) => {
   const common = "h-5 w-5 shrink-0";
   switch (name) {
     case "computer":
@@ -27,6 +27,18 @@ const Icon = ({ name }: { name: "computer" | "wifi" | "server" | "camera" }) => 
           <path d="M9 4a1 1 0 0 0-.8.4L6.5 6H5a3 3 0 0 0-3 3v7a3 3 0 0 0 3 3h14a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-1.5L15.8 4.4A1 1 0 0 0 15 4H9Zm3 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 .001 6.001A3 3 0 0 0 12 11Z"/>
         </svg>
       );
+    case "cabling":
+      return (
+        <svg viewBox="0 0 24 24" width={20} height={20} className={common} fill="currentColor" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <path d="M3 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4Zm0 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-2Zm7-7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V4Zm0 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2Zm7-7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1V4Zm0 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-2Z"/>
+        </svg>
+      );
+    case "av":
+      return (
+        <svg viewBox="0 0 24 24" width={20} height={20} className={common} fill="currentColor" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+          <path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5Zm4 3a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V9a1 1 0 0 0-1-1Zm4 0a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V9a1 1 0 0 0-1-1Zm4 0a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V9a1 1 0 0 0-1-1Z"/>
+        </svg>
+      );
   }
 };
 
@@ -36,13 +48,13 @@ function Card({
   blurb,
   bullets,
 }: {
-  icon: "computer" | "wifi" | "server" | "camera";
+  icon: "computer" | "wifi" | "server" | "camera" | "cabling" | "av";
   title: string;
   blurb: string;
   bullets: string[];
 }) {
   return (
-    <div className="group relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-8 shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 transition">
+    <div className="group relative rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md p-6 sm:p-8 shadow-xl shadow-black/20 hover:shadow-2xl hover:shadow-black/30 hover:border-white/15 transition">
       <div className="mb-4 flex items-start gap-3 min-h-[2.5rem]">
         <span className="mt-0.5 inline-flex h-10 w-10 flex-none aspect-square items-center justify-center rounded-full bg-blue-500/20 text-blue-300 ring-1 ring-inset ring-blue-400/30 leading-none">
           <Icon name={icon} />
@@ -78,58 +90,87 @@ export default function Services() {
           Our Services
         </h2>
         <p className="mx-auto mt-3 max-w-3xl text-center text-neutral-300/90">
-          Practical, reliable help for homes and small businesses—delivered with Blue Arc polish.
+          Professional IT, networking, cabling, and surveillance solutions for businesses, job sites, and modern commercial spaces.
         </p>
 
-        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           <Card
             icon="computer"
-            title="Computer Repair & Troubleshooting"
-            blurb="Whether your computer is running slow, crashing, or just not working right—we can fix it. Fast and friendly service for both hardware and software issues."
+            title="Managed IT & Computer Support"
+            blurb="Onsite IT support and troubleshooting for business workstations, desktops, and peripherals. Stable systems, reduced downtime, and reliable connectivity in office and commercial environments."
             bullets={[
-              "Fix slow or unresponsive computers",
-              "Remove viruses, malware, and pop-ups",
-              "Set up new desktops, laptops, monitors, or printers",
-              "Fix boot issues, blue screens, and driver problems",
+              "Workstation setup, repair, and maintenance",
+              "Virus removal, malware remediation, and security hardening",
+              "Software configuration and troubleshooting",
+              "Printer, scanner, and peripheral setup",
             ]}
           />
-
           <Card
             icon="wifi"
-            title="Better Wi‑Fi, Faster Internet, and Secure Networking"
-            blurb="Tired of slow internet or dead zones? We’ll boost your Wi‑Fi signal, secure your network, and help you connect reliably—at home or in the office."
+            title="Network Design & Wi-Fi Solutions"
+            blurb="Onsite network design and Wi-Fi deployment for offices, retail, and job sites. Reliable connectivity through properly placed access points, VLANs, and secure segmentation."
             bullets={[
-              "Fix dropped signals or slow Wi‑Fi",
-              "Set up routers, switches, and access points",
-              "Configure secure business networks",
-              "Enable remote work or VPN connections",
+              "Wi-Fi surveys, design, and access point deployment",
+              "Router, switch, and firewall configuration",
+              "Secure business networks and VLAN segmentation",
+              "Remote access and VPN setup",
             ]}
           />
 
           <Card
             icon="server"
-            title="Server Setup, Management & Troubleshooting"
-            blurb="We handle everything from setting up servers to keeping them running securely and efficiently. Whether it’s Windows Server, file shares, or user permissions—we’ve got it covered."
+            title="Server & Infrastructure Support"
+            blurb="Onsite server setup, management, and troubleshooting. Stable infrastructure with Active Directory, file shares, and backups—built for reduced downtime in business environments."
             bullets={[
-              "Set up and configure Windows and Linux servers",
-              "Manage Active Directory, users, and group policies",
-              "File server setup and network shares",
-              "Firewall and port configuration",
-              "Troubleshoot server errors and crashes",
+              "Windows Server and Linux server setup",
+              "Active Directory, users, and group policies",
+              "File server and network share configuration",
+              "Backup, disaster recovery, and monitoring",
             ]}
           />
 
           <Card
             icon="camera"
-            title="Business Audio/Video Installation and Troubleshooting"
-            blurb="Need help setting up speakers, security cameras, or TVs? We install, configure, and troubleshoot audio/video systems so everything works like it should—without the headache."
+            title="Surveillance Systems"
+            blurb="Onsite IP and analog camera installation with NVR/DVR recording and remote viewing. Clean installations for business property and site monitoring."
             bullets={[
-              "Complex video streaming setups",
-              "Video wall setup and maintenance",
-              "Help with HDMI, streaming, or signal issues",
-              "Connect and configure security cameras (analog or IP)",
+              "IP and analog camera installation",
+              "NVR/DVR setup and remote viewing",
+              "Site survey and camera placement",
+              "Integration with existing security systems",
             ]}
           />
+          <Card
+            icon="cabling"
+            title="Structured Cabling"
+            blurb="Onsite Cat6 and fiber installations for workstations, PoE devices, and network infrastructure. Clean termination, labeling, and organized rack routing for reliable connectivity."
+            bullets={[
+              "Cat6 and fiber cable runs",
+              "Patch panels and rack installation",
+              "Cable organization and labeling",
+              "PoE and low-voltage drops",
+            ]}
+          />
+          <Card
+            icon="av"
+            title="Audio / Video & Smart Systems"
+            blurb="Onsite commercial display and video wall installation for conference rooms, lobbies, and retail. Clean installations and stable AV systems for business environments."
+            bullets={[
+              "Commercial display and video wall installation",
+              "Meeting room and conference AV setup",
+              "HDMI, streaming, and signal troubleshooting",
+              "Smart building and control integrations",
+            ]}
+          />
+        </div>
+
+        <div className="mt-12 text-center">
+          <a
+            href="#contact"
+            className="inline-flex items-center justify-center rounded-md bg-blue-600 px-6 py-3 text-white font-semibold shadow-lg shadow-blue-900/30 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400/60 transition"
+          >
+            Request Service
+          </a>
         </div>
       </div>
 
