@@ -14,11 +14,33 @@ const About = () => {
       />
       <div className="mx-auto max-w-5xl px-4">
         <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white text-center">
-          About Blue Arc
+          About Blue Arc Networks
         </h2>
         <p className="mt-6 text-lg leading-8 text-neutral-300 text-center max-w-3xl mx-auto">
-          Blue Arc Networks is led by Vlad Avdeev, providing hands-on IT, networking, cabling, and surveillance support for businesses across Chico and Northern California. With experience spanning troubleshooting, infrastructure deployments, Wi-Fi optimization, and onsite technical field work, Blue Arc focuses on reliable solutions that are built cleanly and work the way they should.
+          Blue Arc Networks is a locally owned IT and low-voltage company based in Chico, California, led by Vlad Avdeev. We provide hands-on IT support, network design, structured cabling, and surveillance camera installation for offices, retail, and job sites across Butte County and Northern California.
         </p>
+        <p className="mt-4 text-base leading-7 text-neutral-400 text-center max-w-3xl mx-auto">
+          Our focus is simple: reliable systems, clean installs, and clear communication. From a single workstation issue to a full network and camera deployment, we treat every project like it has to keep working long after we leave.
+        </p>
+
+        <dl className="mt-12 grid grid-cols-2 gap-6 sm:grid-cols-4 max-w-3xl mx-auto text-center">
+          <div>
+            <dt className="text-sm uppercase tracking-wider text-neutral-400">Based in</dt>
+            <dd className="mt-1 text-xl font-semibold text-white">Chico, CA</dd>
+          </div>
+          <div>
+            <dt className="text-sm uppercase tracking-wider text-neutral-400">Service area</dt>
+            <dd className="mt-1 text-xl font-semibold text-white">Northern CA</dd>
+          </div>
+          <div>
+            <dt className="text-sm uppercase tracking-wider text-neutral-400">Response</dt>
+            <dd className="mt-1 text-xl font-semibold text-white">Same-day</dd>
+          </div>
+          <div>
+            <dt className="text-sm uppercase tracking-wider text-neutral-400">Quotes</dt>
+            <dd className="mt-1 text-xl font-semibold text-white">Free</dd>
+          </div>
+        </dl>
       </div>
     </section>
   );

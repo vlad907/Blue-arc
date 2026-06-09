@@ -7,6 +7,7 @@ import Trustedby from "@/components/trustedby";
 import Contact from "@/components/Contact";
 import About from "@/components/About";
 import Footer from "@/components/Footer";
+import MobileCallCTA from "@/components/MobileCallCTA";
 import { getProjects } from "@/lib/projects";
 import { getTrusted } from "@/lib/trusted";
 
@@ -24,6 +25,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
       <Trustedby logos={trusted} />
       <Contact />
       <Footer />
+      <MobileCallCTA />
       <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
     </>
   );

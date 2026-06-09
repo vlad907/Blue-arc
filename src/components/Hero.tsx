@@ -171,7 +171,7 @@ export default function Hero() {
           <div className="hero-animate-in flex flex-col items-center gap-4 sm:gap-5">
             <Image
               src={assetPath("/logos/Blue-arc.png")}
-              alt=""
+              alt="Blue Arc Networks logo"
               width={200}
               height={80}
               className="h-16 w-auto sm:h-20 md:h-24"
@@ -181,9 +181,29 @@ export default function Hero() {
               Blue Arc <span className="text-blue-600 dark:text-blue-400">Networks</span>
             </h1>
           </div>
-          <p className="hero-animate-in hero-animate-delay-1 mx-auto mt-8 max-w-xl text-base font-medium leading-relaxed text-neutral-200 sm:mt-10 sm:text-lg">
-            Reliable onsite IT and infrastructure for Chico businesses.
+          <p className="hero-animate-in hero-animate-delay-1 mx-auto mt-6 max-w-2xl text-lg font-medium leading-relaxed text-neutral-100 sm:mt-8 sm:text-xl">
+            IT Support, Business Wi-Fi, Cabling & Surveillance in Chico, CA
           </p>
+          <p className="hero-animate-in hero-animate-delay-1 mx-auto mt-3 max-w-xl text-sm leading-relaxed text-neutral-300 sm:text-base">
+            Reliable onsite service for businesses across Chico and Northern California — clean installations, fast troubleshooting, and infrastructure built to last.
+          </p>
+          <ul
+            className="hero-animate-in hero-animate-delay-1 mx-auto mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium uppercase tracking-wider text-neutral-300 sm:text-sm"
+            aria-label="Why choose us"
+          >
+            <li className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" aria-hidden />
+              Locally owned
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" aria-hidden />
+              Same-day response
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" aria-hidden />
+              Free quotes
+            </li>
+          </ul>
           <div className="hero-animate-in hero-animate-delay-2 mt-10 flex flex-col items-stretch justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">
             <a
               href="#contact"

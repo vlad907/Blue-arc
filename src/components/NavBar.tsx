@@ -142,7 +142,12 @@ export default function NavBar() {
   }, [updateScrollT]);
 
   const t = scrollT;
-  const brandW = t * BRAND_MAX_WIDTH_PX;
+  // On mobile, cap the brand area so the hamburger button always stays on-screen.
+  // 56px leaves room for the 40px button + the row's 16px padding/gap.
+  const brandMaxW = isMd
+    ? BRAND_MAX_WIDTH_PX
+    : Math.max(0, Math.min(BRAND_MAX_WIDTH_PX, navInnerW - 56));
+  const brandW = t * brandMaxW;
 
   /**
    * Desktop: links sit in a flex-1 + justify-end region (flush right at t=1).
@@ -177,7 +182,7 @@ export default function NavBar() {
           className="shrink-0 overflow-hidden"
           style={{
             width: `${brandW}px`,
-            maxWidth: BRAND_MAX_WIDTH_PX,
+            maxWidth: brandMaxW,
           }}
         >
           <a
@@ -186,8 +191,8 @@ export default function NavBar() {
             style={{
               opacity: t,
               pointerEvents: t < 0.08 ? "none" : "auto",
-              width: BRAND_MAX_WIDTH_PX,
-              minWidth: BRAND_MAX_WIDTH_PX,
+              width: brandMaxW,
+              minWidth: brandMaxW,
             }}
           >
             <Image
@@ -208,17 +213,32 @@ export default function NavBar() {
           onClick={() => setOpen((v) => !v)}
           aria-controls="navbar-default"
           aria-expanded={open}
-          className="ml-auto inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg p-2 text-sm text-gray-300 md:hidden focus:outline-none focus:ring-2 focus:ring-white/20"
+          aria-label={open ? "Close main menu" : "Open main menu"}
+          className="ml-auto inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-white transition hover:border-white/20 hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950 md:hidden"
         >
-          <span className="sr-only">Open main menu</span>
-          <svg className="h-5 w-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M1 1h15M1 7h15M1 13h15"
-            />
+          <span className="sr-only">{open ? "Close main menu" : "Open main menu"}</span>
+          <svg
+            className="h-5 w-5"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            {open ? (
+              <>
+                <path d="M6 6l12 12" />
+                <path d="M6 18L18 6" />
+              </>
+            ) : (
+              <>
+                <path d="M3 6h18" />
+                <path d="M3 12h18" />
+                <path d="M3 18h18" />
+              </>
+            )}
           </svg>
         </button>
 
@@ -228,9 +248,9 @@ export default function NavBar() {
         >
           <ul
             ref={ulRef}
-            className={`font-medium mx-4 mt-3 flex shrink-0 flex-col rounded-xl border p-3 shadow-none md:mx-0 md:mt-0 md:flex-row md:items-center md:space-x-6 md:rounded-none md:border-0 md:p-0 md:shadow-none ${
-              t < 0.85 && open
-                ? "border-white/10 bg-neutral-950/95 backdrop-blur-md md:border-transparent md:bg-transparent"
+            className={`font-medium mx-4 mt-3 flex shrink-0 flex-col rounded-xl border p-3 shadow-xl shadow-black/40 md:mx-0 md:mt-0 md:flex-row md:items-center md:space-x-6 md:rounded-none md:border-0 md:p-0 md:shadow-none ${
+              open
+                ? "border-white/10 bg-neutral-950/95 backdrop-blur-md md:border-transparent md:bg-transparent md:backdrop-blur-0"
                 : "border-transparent bg-transparent md:bg-transparent"
             }`}
             style={{
