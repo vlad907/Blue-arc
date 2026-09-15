@@ -15,10 +15,8 @@ const VIDEO_SOURCES: { src: string; start: number; end: number }[] = [
   { src: assetPath("/jobs/pourhouse/PH3.mp4"), start: 0, end: 2 },
 ];
 
-const HEADLINE_LINES = [
-  ["Networks", "that"],
-  ["just", "work."],
-];
+/** First word cycles via typewriter; the rest of the line stays fixed. */
+const ROTATING_WORDS = ["Networks", "Computers", "Cameras", "Wi-Fi", "Servers", "POS"];
 
 /**
  * Hero: background (z-0) → overlay (z-10) → content (z-20).
@@ -32,6 +30,7 @@ export default function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
   const videoLayerRef = useRef<HTMLDivElement | null>(null);
+  const rotatingRef = useRef<HTMLSpanElement | null>(null);
   const sourceIndexRef = useRef(0);
   const isTransitioningRef = useRef(false);
 
@@ -118,12 +117,57 @@ export default function Hero() {
     };
   }, [activeIndex]);
 
-  /* Entrance timeline (after preloader) + scroll parallax */
+  /* Entrance timeline (after preloader) + scroll parallax + typewriter */
   useLayoutEffect(() => {
     const section = sectionRef.current;
     const content = contentRef.current;
+    const rotating = rotatingRef.current;
     if (!section || !content) return;
     if (prefersReducedMotion()) return;
+
+    // --- Typewriter that cycles the first word once the intro finishes ---
+    let cancelled = false;
+    const timers: number[] = [];
+    const schedule = (fn: () => void, ms: number) => {
+      timers.push(window.setTimeout(fn, ms));
+    };
+    const TYPE = 78;
+    const DEL = 42;
+    const HOLD_FULL = 1700;
+    const HOLD_EMPTY = 320;
+    let idx = 0; // index of the word currently shown ("Networks")
+
+    const typeWord = (word: string, done: () => void) => {
+      let i = 0;
+      const step = () => {
+        if (cancelled || !rotating) return;
+        i += 1;
+        rotating.textContent = word.slice(0, i);
+        if (i >= word.length) return done();
+        schedule(step, TYPE);
+      };
+      step();
+    };
+    const deleteWord = (done: () => void) => {
+      const step = () => {
+        if (cancelled || !rotating) return;
+        const t = rotating.textContent ?? "";
+        if (t.length === 0) return schedule(done, HOLD_EMPTY);
+        rotating.textContent = t.slice(0, -1);
+        schedule(step, DEL);
+      };
+      step();
+    };
+    const loop = () => {
+      if (cancelled) return;
+      deleteWord(() => {
+        idx = (idx + 1) % ROTATING_WORDS.length;
+        typeWord(ROTATING_WORDS[idx], () => schedule(loop, HOLD_FULL));
+      });
+    };
+    const startTypewriter = () => {
+      if (!cancelled && rotating) schedule(loop, HOLD_FULL);
+    };
 
     const ctx = gsap.context(() => {
       // Set initial hidden state so nothing flashes before the intro plays.
@@ -131,7 +175,10 @@ export default function Hero() {
       gsap.set(".hero-fade", { autoAlpha: 0, y: 24 });
 
       const playIntro = () => {
-        const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+        const tl = gsap.timeline({
+          defaults: { ease: "power4.out" },
+          onComplete: startTypewriter,
+        });
         tl.to(".hero-word-inner", {
           yPercent: 0,
           duration: 1.1,
@@ -185,7 +232,11 @@ export default function Hero() {
       };
     }, section);
 
-    return () => ctx.revert();
+    return () => {
+      cancelled = true;
+      timers.forEach((id) => window.clearTimeout(id));
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -255,25 +306,32 @@ export default function Hero() {
             </span>
           </div>
 
-          <h1 className="font-display mt-6 text-[15vw] font-semibold leading-[0.92] tracking-tight text-white sm:text-[12vw] lg:text-[9.5vw]">
-            {HEADLINE_LINES.map((line, li) => (
-              <span key={li} className="block">
-                {line.map((word, wi) => (
-                  <span
-                    key={wi}
-                    className="mr-[0.22em] inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-bottom"
-                  >
-                    <span
-                      className={`hero-word-inner inline-block will-change-transform ${
-                        word === "work." ? "text-blue-500" : ""
-                      }`}
-                    >
-                      {word}
-                    </span>
+          <h1
+            className="font-display mt-6 text-[15vw] font-semibold leading-[0.95] tracking-tight text-white sm:text-[12vw] lg:text-[9.5vw]"
+            aria-label="Networks, computers, cameras and POS that just work."
+          >
+            <span className="block">
+              <span className="inline-block overflow-hidden pb-[0.16em] -mb-[0.16em] align-bottom">
+                <span className="hero-word-inner inline-block whitespace-nowrap will-change-transform">
+                  <span ref={rotatingRef} className="text-blue-500">
+                    Networks
                   </span>
-                ))}
+                  <span className="hero-caret" aria-hidden />
+                </span>
               </span>
-            ))}
+            </span>
+            <span className="block" aria-hidden>
+              {["that", "just", "work."].map((word, wi) => (
+                <span
+                  key={wi}
+                  className="mr-[0.22em] inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-bottom"
+                >
+                  <span className="hero-word-inner inline-block will-change-transform">
+                    {word}
+                  </span>
+                </span>
+              ))}
+            </span>
           </h1>
 
           <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
