@@ -1,8 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
+import { assetPath } from "@/lib/asset-path";
 
-export default function AdminTrustedForm() {
+type Props = {
+  onSuccess?: () => void;
+};
+
+export default function AdminTrustedForm({ onSuccess }: Props) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [name, setName] = useState("");
@@ -21,7 +26,7 @@ export default function AdminTrustedForm() {
     if (file) formData.set("logo", file);
 
     try {
-      const res = await fetch("/api/admin/trusted", {
+      const res = await fetch(assetPath("/api/admin/trusted"), {
         method: "POST",
         body: formData,
       });
@@ -37,6 +42,7 @@ export default function AdminTrustedForm() {
       setHref("");
       setFile(null);
       form.reset();
+      onSuccess?.();
     } catch (err) {
       setMessage(err instanceof Error ? err.message : "Upload failed");
       setStatus("error");

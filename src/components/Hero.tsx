@@ -1,8 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { assetPath } from "@/lib/asset-path";
+import { gsap } from "@/lib/gsap";
+import { prefersReducedMotion } from "@/lib/lenis";
+import { Magnetic } from "@/components/motion";
 
 const FADE_DURATION_MS = 400;
 
@@ -10,6 +13,11 @@ const VIDEO_SOURCES: { src: string; start: number; end: number }[] = [
   { src: assetPath("/hero.mp4"), start: 0, end: 2 },
   { src: assetPath("/jobs/pourhouse/PH2.mp4"), start: 1, end: 3 },
   { src: assetPath("/jobs/pourhouse/PH3.mp4"), start: 0, end: 2 },
+];
+
+const HEADLINE_LINES = [
+  ["Networks", "that"],
+  ["just", "work."],
 ];
 
 /**
@@ -22,6 +30,8 @@ export default function Hero() {
   const [canPlayVideo, setCanPlayVideo] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const sectionRef = useRef<HTMLElement | null>(null);
+  const contentRef = useRef<HTMLDivElement | null>(null);
+  const videoLayerRef = useRef<HTMLDivElement | null>(null);
   const sourceIndexRef = useRef(0);
   const isTransitioningRef = useRef(false);
 
@@ -29,8 +39,8 @@ export default function Hero() {
 
   useEffect(() => {
     const prefersReducedData = (navigator as NavigatorWithConnection).connection?.saveData === true;
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedData || prefersReducedMotion) return;
+    const prefersReducedMotionFlag = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (prefersReducedData || prefersReducedMotionFlag) return;
 
     const videos = [video0Ref.current, video1Ref.current];
     const fadeStart = FADE_DURATION_MS / 1000;
@@ -108,14 +118,84 @@ export default function Hero() {
     };
   }, [activeIndex]);
 
+  /* Entrance timeline (after preloader) + scroll parallax */
+  useLayoutEffect(() => {
+    const section = sectionRef.current;
+    const content = contentRef.current;
+    if (!section || !content) return;
+    if (prefersReducedMotion()) return;
+
+    const ctx = gsap.context(() => {
+      // Set initial hidden state so nothing flashes before the intro plays.
+      gsap.set(".hero-word-inner", { yPercent: 120 });
+      gsap.set(".hero-fade", { autoAlpha: 0, y: 24 });
+
+      const playIntro = () => {
+        const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+        tl.to(".hero-word-inner", {
+          yPercent: 0,
+          duration: 1.1,
+          stagger: 0.09,
+        })
+          .to(
+            ".hero-fade",
+            { autoAlpha: 1, y: 0, duration: 0.9, stagger: 0.12 },
+            "-=0.6"
+          );
+      };
+
+      // Wait for the preloader, with a fallback in case it's absent.
+      let played = false;
+      const start = () => {
+        if (played) return;
+        played = true;
+        playIntro();
+      };
+      window.addEventListener("preloader:done", start, { once: true });
+      const fallback = window.setTimeout(start, 3200);
+
+      // Parallax on scroll
+      gsap.to(content, {
+        yPercent: 26,
+        autoAlpha: 0,
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: "bottom top",
+          scrub: true,
+        },
+      });
+      if (videoLayerRef.current) {
+        gsap.to(videoLayerRef.current, {
+          scale: 1.18,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top top",
+            end: "bottom top",
+            scrub: true,
+          },
+        });
+      }
+
+      return () => {
+        window.removeEventListener("preloader:done", start);
+        window.clearTimeout(fallback);
+      };
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
       id="home"
       ref={sectionRef}
-      className="relative isolate flex min-h-[70vh] flex-col overflow-hidden bg-neutral-950 sm:min-h-[75vh] lg:min-h-[88vh]"
+      className="relative isolate flex min-h-[92vh] flex-col overflow-hidden bg-neutral-950"
     >
       {/* Layer 1: background video only (z-0) */}
-      <div className="absolute inset-0 z-0">
+      <div ref={videoLayerRef} className="absolute inset-0 z-0 will-change-transform">
         {[0, 1].map((i) => (
           <video
             key={i}
@@ -147,7 +227,7 @@ export default function Hero() {
 
       {/* Layer 2: darkening — only covers video; pointer-events none (z-10) */}
       <div className="pointer-events-none absolute inset-0 z-10" aria-hidden>
-        <div className="absolute inset-0 bg-black/45" />
+        <div className="absolute inset-0 bg-black/50" />
         <div
           className="absolute inset-0"
           style={{
@@ -155,68 +235,89 @@ export default function Hero() {
               "radial-gradient(ellipse 95% 85% at 50% 42%, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.35) 52%, rgba(0,0,0,0.25) 100%)",
           }}
         />
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.2) 42%, rgba(0,0,0,0.35) 100%)",
-          }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/50" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-neutral-950" />
       </div>
 
-      {/* Layer 3: content — above overlay; no wrapper opacity / no backdrop on container (z-20) */}
-      <div className="relative z-20 flex min-h-0 flex-1 flex-col items-center justify-center px-4 pb-20 pt-24 sm:pb-24 sm:pt-28 lg:pb-28 lg:pt-32">
-        <div className="mx-auto max-w-3xl text-center">
-          <div className="hero-animate-in flex flex-col items-center gap-4 sm:gap-5">
+      {/* Layer 3: content (z-20) */}
+      <div className="relative z-20 flex min-h-0 flex-1 flex-col justify-center px-5 pb-24 pt-28 sm:px-8 lg:px-12">
+        <div ref={contentRef} className="mx-auto w-full max-w-6xl">
+          <div className="hero-fade flex items-center gap-3">
             <Image
               src={assetPath("/logos/Blue-arc.png")}
               alt="Blue Arc Networks logo"
-              width={200}
-              height={80}
-              className="h-16 w-auto sm:h-20 md:h-24"
+              width={120}
+              height={48}
+              className="h-9 w-auto sm:h-11"
               priority
             />
-            <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl">
-              Blue Arc <span className="text-blue-600 dark:text-blue-400">Networks</span>
-            </h1>
+            <span className="font-display text-sm font-medium uppercase tracking-[0.28em] text-neutral-200">
+              Blue Arc Networks
+            </span>
           </div>
-          <p className="hero-animate-in hero-animate-delay-1 mx-auto mt-6 max-w-2xl text-lg font-medium leading-relaxed text-neutral-100 sm:mt-8 sm:text-xl">
-            IT Support, Business Wi-Fi, Cabling & Surveillance in Chico, CA
-          </p>
-          <p className="hero-animate-in hero-animate-delay-1 mx-auto mt-3 max-w-xl text-sm leading-relaxed text-neutral-300 sm:text-base">
-            Reliable onsite service for businesses across Chico and Northern California — clean installations, fast troubleshooting, and infrastructure built to last.
-          </p>
-          <ul
-            className="hero-animate-in hero-animate-delay-1 mx-auto mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs font-medium uppercase tracking-wider text-neutral-300 sm:text-sm"
-            aria-label="Why choose us"
-          >
-            <li className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" aria-hidden />
-              Locally owned
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" aria-hidden />
-              Same-day response
-            </li>
-            <li className="flex items-center gap-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-blue-400" aria-hidden />
-              Free quotes
-            </li>
-          </ul>
-          <div className="hero-animate-in hero-animate-delay-2 mt-10 flex flex-col items-stretch justify-center gap-3 sm:mt-12 sm:flex-row sm:items-center sm:gap-4">
-            <a
-              href="#contact"
-              className="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-blue-500 px-8 py-3 text-center text-base font-semibold text-white shadow-lg shadow-black/40 transition hover:bg-blue-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
-            >
-              Get a Quote
-            </a>
-            <a
-              href="#ourwork"
-              className="inline-flex min-h-[48px] items-center justify-center rounded-lg border border-white/35 bg-white/10 px-8 py-3 text-center text-base font-semibold text-white transition hover:border-white/55 hover:bg-white/18 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/45 focus-visible:ring-offset-2 focus-visible:ring-offset-neutral-950"
-            >
-              View Our Work
-            </a>
+
+          <h1 className="font-display mt-6 text-[15vw] font-semibold leading-[0.92] tracking-tight text-white sm:text-[12vw] lg:text-[9.5vw]">
+            {HEADLINE_LINES.map((line, li) => (
+              <span key={li} className="block">
+                {line.map((word, wi) => (
+                  <span
+                    key={wi}
+                    className="mr-[0.22em] inline-block overflow-hidden pb-[0.12em] -mb-[0.12em] align-bottom"
+                  >
+                    <span
+                      className={`hero-word-inner inline-block will-change-transform ${
+                        word === "work." ? "text-blue-500" : ""
+                      }`}
+                    >
+                      {word}
+                    </span>
+                  </span>
+                ))}
+              </span>
+            ))}
+          </h1>
+
+          <div className="mt-8 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-xl">
+              <p className="hero-fade text-lg font-medium leading-relaxed text-neutral-100 sm:text-xl">
+                IT Support, Business Wi-Fi, Cabling &amp; Surveillance in Chico, CA.
+              </p>
+              <p className="hero-fade mt-3 max-w-lg text-sm leading-relaxed text-neutral-300 sm:text-base">
+                Reliable onsite service for businesses across Chico and Northern
+                California — clean installations, fast troubleshooting, and
+                infrastructure built to last.
+              </p>
+              <ul
+                className="hero-fade mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-medium uppercase tracking-wider text-neutral-300 sm:text-sm"
+                aria-label="Why choose us"
+              >
+                {["Locally owned", "Same-day response", "Free quotes"].map((t) => (
+                  <li key={t} className="flex items-center gap-2">
+                    <span className="h-1.5 w-1.5 rounded-full bg-blue-400" aria-hidden />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="hero-fade flex flex-col items-stretch gap-3 sm:flex-row sm:items-center">
+              <Magnetic strength={0.4}>
+                <a
+                  href="#contact"
+                  data-cursor="Get a quote"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full bg-blue-500 px-8 py-3 text-base font-semibold text-white shadow-lg shadow-black/40 transition hover:bg-blue-400"
+                >
+                  Get a Quote
+                </a>
+              </Magnetic>
+              <Magnetic strength={0.3}>
+                <a
+                  href="#ourwork"
+                  className="inline-flex min-h-[52px] items-center justify-center rounded-full border border-white/30 bg-white/10 px-8 py-3 text-base font-semibold text-white backdrop-blur transition hover:border-white/55 hover:bg-white/20"
+                >
+                  View Our Work
+                </a>
+              </Magnetic>
+            </div>
           </div>
         </div>
 
@@ -225,23 +326,17 @@ export default function Hero() {
           aria-label="Scroll to next section"
           onClick={() => {
             const sect = sectionRef.current;
-            if (!sect) return;
-            const next = sect.nextElementSibling as HTMLElement | null;
-            if (next) {
-              next.scrollIntoView({ behavior: "smooth", block: "start" });
-            }
+            const next = sect?.nextElementSibling as HTMLElement | null;
+            next?.scrollIntoView({ behavior: "smooth", block: "start" });
           }}
-          className="group absolute bottom-6 left-1/2 inline-flex h-11 w-11 -translate-x-1/2 items-center justify-center rounded-full border border-white/25 bg-neutral-900/90 text-white transition hover:border-white/45 hover:bg-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50 sm:bottom-8"
+          className="hero-fade group absolute bottom-6 left-1/2 flex -translate-x-1/2 flex-col items-center gap-2 text-white sm:bottom-8"
         >
-          <svg
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 transition-transform group-hover:translate-y-0.5"
-            aria-hidden="true"
-            fill="currentColor"
-          >
-            <path d="M12 16a1 1 0 0 1-.707-.293l-6-6a1 1 0 1 1 1.414-1.414L12 13.586l5.293-5.293a1 1 0 0 1 1.414 1.414l-6 6A1 1 0 0 1 12 16z" />
-          </svg>
+          <span className="text-[10px] font-medium uppercase tracking-[0.3em] text-neutral-300">
+            Scroll
+          </span>
+          <span className="relative flex h-10 w-6 justify-center rounded-full border border-white/30">
+            <span className="mt-1.5 h-2 w-1 animate-bounce rounded-full bg-white/80" />
+          </span>
         </button>
       </div>
     </section>

@@ -8,6 +8,11 @@ import Contact from "@/components/Contact";
 import About from "@/components/About";
 import Footer from "@/components/Footer";
 import MobileCallCTA from "@/components/MobileCallCTA";
+import MarqueeBand from "@/components/MarqueeBand";
+import SmoothScrollProvider from "@/components/motion/SmoothScrollProvider";
+import Cursor from "@/components/motion/Cursor";
+import Preloader from "@/components/Preloader";
+import ScrollProgress from "@/components/ScrollProgress";
 import { getProjects } from "@/lib/projects";
 import { getTrusted } from "@/lib/trusted";
 
@@ -15,9 +20,13 @@ export default async function MainLayout({ children }: { children: React.ReactNo
   const [projects, trusted] = await Promise.all([getProjects(), getTrusted()]);
 
   return (
-    <>
+    <SmoothScrollProvider>
+      <Preloader />
+      <Cursor />
+      <ScrollProgress />
       <NavBar />
       <Hero />
+      <MarqueeBand />
       <Services />
       <ProjectHighlights items={projects} />
       <About />
@@ -27,6 +36,6 @@ export default async function MainLayout({ children }: { children: React.ReactNo
       <Footer />
       <MobileCallCTA />
       <main className="mx-auto max-w-6xl px-4 py-8">{children}</main>
-    </>
+    </SmoothScrollProvider>
   );
 }

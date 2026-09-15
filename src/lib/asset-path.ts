@@ -1,8 +1,8 @@
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 /**
- * Resolves local asset paths (from /public) to include the configured Next.js basePath.
- * External URLs (http/https) are returned unchanged.
+ * Resolves app-local paths (/public assets, `fetch("/api/...")`, etc.) to include the configured
+ * Next.js `basePath`. External URLs (http/https) are returned unchanged.
  */
 export const assetPath = (input: string): string => {
   if (!input) return input;

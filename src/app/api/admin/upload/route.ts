@@ -1,6 +1,10 @@
 import { NextResponse } from "next/server";
+
+/** Required for `output: "export"` — admin APIs only run in development. */
+export const dynamic = "force-static";
 import { writeFile, mkdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { isAdminApiEnabled } from "@/lib/admin-env";
 import { PROJECT_CATEGORIES } from "@/lib/projects-constants";
 
 const VALID_CATEGORIES = new Set<string>(PROJECT_CATEGORIES.map((c) => c.value));
@@ -13,7 +17,7 @@ function slugify(s: string): string {
 }
 
 export async function POST(request: Request) {
-  if (process.env.NODE_ENV !== "development") {
+  if (!isAdminApiEnabled()) {
     return NextResponse.json({ error: "Not available" }, { status: 404 });
   }
 

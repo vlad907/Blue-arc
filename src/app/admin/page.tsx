@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
-import AdminUploadForm from "./AdminUploadForm";
-import AdminTrustedForm from "./AdminTrustedForm";
+import { isAdminApiEnabled } from "@/lib/admin-env";
+import AdminProjectsSection from "./AdminProjectsSection";
+import AdminTrustedSection from "./AdminTrustedSection";
 
 export default function AdminPage() {
-  if (process.env.NODE_ENV !== "development") {
+  if (!isAdminApiEnabled()) {
     notFound();
   }
 
@@ -11,23 +12,23 @@ export default function AdminPage() {
     <div className="py-12">
       <div className="mx-auto max-w-2xl space-y-16 px-4">
         <section>
-          <h1 className="text-2xl font-bold text-white">Project Upload</h1>
+          <h1 className="text-2xl font-bold text-white">Job posts (projects)</h1>
           <p className="mt-2 text-sm text-neutral-400">
-            Add project photos and metadata. Saves to{" "}
+            Add, edit, or delete project highlights. Saves to{" "}
             <code className="rounded bg-neutral-800 px-1">/public/projects/</code> and{" "}
             <code className="rounded bg-neutral-800 px-1">/data/projects.json</code>
           </p>
-          <AdminUploadForm />
+          <AdminProjectsSection />
         </section>
 
         <section>
           <h2 className="text-2xl font-bold text-white">Trusted By Companies</h2>
           <p className="mt-2 text-sm text-neutral-400">
-            Add company logos for the Trusted By section. Saves to{" "}
+            Add, edit, or delete logos for the Trusted By section. Saves to{" "}
             <code className="rounded bg-neutral-800 px-1">/public/logos/</code> and{" "}
             <code className="rounded bg-neutral-800 px-1">/data/trusted.json</code>
           </p>
-          <AdminTrustedForm />
+          <AdminTrustedSection />
         </section>
       </div>
     </div>

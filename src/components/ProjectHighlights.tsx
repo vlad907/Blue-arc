@@ -4,6 +4,8 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import Image from "next/image";
 import { assetPath } from "@/lib/asset-path";
 import { getCategoryLabel, type ProjectEntry } from "@/lib/projects-constants";
+import { getLenis } from "@/lib/lenis";
+import { AnimatedText, Reveal } from "@/components/motion";
 
 const PROJECTS_PER_PAGE = 6;
 
@@ -81,9 +83,12 @@ function ProjectDetailModal({
   }, [onClose, goPrev, goNext]);
 
   useEffect(() => {
+    const lenis = getLenis();
+    lenis?.stop();
     document.body.style.overflow = "hidden";
     return () => {
       document.body.style.overflow = "";
+      lenis?.start();
     };
   }, []);
 
@@ -241,6 +246,7 @@ function ProjectCardComponent({
     <article
       role="button"
       tabIndex={0}
+      data-cursor="View"
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === "Enter" || e.key === " ") {
@@ -328,12 +334,21 @@ export default function ProjectHighlights({ items = DEFAULT_PROJECTS }: { items?
     >
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-blue-950/20 via-transparent to-neutral-950" />
       <div className="mx-auto max-w-6xl px-4">
-        <h2 className="text-center text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
-          Our Work
-        </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-center text-neutral-300/90">
-          Recent deployments and installations for businesses across Northern California.
-        </p>
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <span className="font-display text-sm font-medium uppercase tracking-[0.3em] text-blue-400">
+              02 — Selected Work
+            </span>
+            <AnimatedText
+              as="h2"
+              text="Our Work"
+              className="font-display mt-3 text-4xl font-semibold tracking-tight text-white sm:text-6xl"
+            />
+          </div>
+          <p className="max-w-md text-neutral-300/90 sm:text-right">
+            Recent deployments and installations for businesses across Northern California.
+          </p>
+        </div>
 
         {filteredItems.length === 0 ? (
           <div className="mt-12 rounded-2xl border border-white/10 bg-white/[0.02] py-16 text-center">
@@ -341,7 +356,13 @@ export default function ProjectHighlights({ items = DEFAULT_PROJECTS }: { items?
           </div>
         ) : (
           <>
-            <div className="mt-10 grid min-h-[320px] gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            <Reveal
+              as="div"
+              stagger={0.12}
+              y={60}
+              key={safePage}
+              className="mt-10 grid min-h-[320px] gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
               {paginatedItems.map((project) => (
                 <ProjectCardComponent
                   key={project.id}
@@ -349,7 +370,7 @@ export default function ProjectHighlights({ items = DEFAULT_PROJECTS }: { items?
                   onClick={() => openProject(project)}
                 />
               ))}
-            </div>
+            </Reveal>
 
             {totalPages > 1 && (
               <div className="mt-10 flex flex-wrap items-center justify-center gap-2">

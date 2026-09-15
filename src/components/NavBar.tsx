@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { assetPath } from "@/lib/asset-path";
+import { smoothScrollTo } from "@/lib/lenis";
 
 /** Scroll distance (px) over which nav fully transitions from hero → solid */
 const SCROLL_TRANSITION_RANGE = 160;
@@ -61,15 +62,6 @@ export default function NavBar() {
   useEffect(() => {
     const navEl = document.querySelector("nav");
     if (!navEl) return;
-
-    const smoothScrollTo = (hash: string) => {
-      const id = hash.replace("#", "");
-      const target = document.getElementById(id);
-      if (!target) return;
-      const headerH = (navEl as HTMLElement).offsetHeight || 0;
-      const y = target.getBoundingClientRect().top + window.scrollY - (headerH + 16);
-      window.scrollTo({ top: y, behavior: "smooth" });
-    };
 
     const onClick = (e: Event) => {
       const anchor = (e.target as HTMLElement).closest('a[href^="#"]') as HTMLAnchorElement | null;

@@ -1,9 +1,14 @@
 "use client";
 
 import React, { useState } from "react";
+import { assetPath } from "@/lib/asset-path";
 import { PROJECT_CATEGORIES } from "@/lib/projects-constants";
 
-export default function AdminUploadForm() {
+type Props = {
+  onSuccess?: () => void;
+};
+
+export default function AdminUploadForm({ onSuccess }: Props) {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [title, setTitle] = useState("");
@@ -27,7 +32,7 @@ export default function AdminUploadForm() {
     }
 
     try {
-      const res = await fetch("/api/admin/upload", {
+      const res = await fetch(assetPath("/api/admin/upload"), {
         method: "POST",
         body: formData,
       });
@@ -42,6 +47,7 @@ export default function AdminUploadForm() {
       setTitle("");
       setDescription("");
       setFiles(null);
+      onSuccess?.();
     } catch (err) {
       setMessage(err instanceof Error ? err.message : "Upload failed");
       setStatus("error");

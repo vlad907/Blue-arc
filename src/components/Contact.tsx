@@ -1,5 +1,7 @@
 "use client";
 import React, { useState } from "react";
+import { assetPath } from "@/lib/asset-path";
+import { AnimatedText, Reveal, Magnetic } from "@/components/motion";
 
 type Props = {
   title?: string;
@@ -23,7 +25,7 @@ const Contact: React.FC<Props> = ({
 
     try {
       // Optional: if you add an API route later, this will work out of the box.
-      const res = await fetch("/api/contact", {
+      const res = await fetch(assetPath("/api/contact"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -81,11 +83,20 @@ const Contact: React.FC<Props> = ({
       />
 
       <div className="mx-auto max-w-6xl px-4">
+        <div className="mb-12 text-center">
+          <span className="font-display text-sm font-medium uppercase tracking-[0.3em] text-blue-400">
+            06 — Contact
+          </span>
+          <AnimatedText
+            as="h2"
+            text={title}
+            className="font-display mt-3 text-4xl font-semibold tracking-tight text-white sm:text-6xl"
+          />
+        </div>
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Left: Copy & Details */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8 backdrop-blur">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">{title}</h2>
-            <p className="mt-2 text-neutral-300">{subtitle}</p>
+          <Reveal className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8 backdrop-blur">
+            <p className="text-neutral-300">{subtitle}</p>
 
             <ul className="mt-6 space-y-3 text-neutral-200">
               <li className="flex items-start gap-3">
@@ -122,10 +133,10 @@ const Contact: React.FC<Props> = ({
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d12626.51196091642!2d-121.848!3d39.728!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80913f3f3a5a9f7f%3A0x8a0d9a54f0b3a9e2!2sChico%2C%20CA!5e0!3m2!1sen!2sus!4v1710000000000"
               />
             </div>
-          </div>
+          </Reveal>
 
           {/* Right: Contact Form */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8 backdrop-blur">
+          <Reveal delay={0.1} className="rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-8 backdrop-blur">
             <h3 className="text-xl sm:text-2xl font-semibold text-white">Contact Us</h3>
             <p className="mt-1 text-neutral-300">We’ll get back to you as soon as possible.</p>
 
@@ -200,14 +211,17 @@ const Contact: React.FC<Props> = ({
                   placeholder="Briefly describe your issue or request…"
                 />
               </div>
-              <div className="sm:col-span-2 flex items-center gap-3">
-                <button
-                  type="submit"
-                  disabled={status === "sending"}
-                  className="inline-flex items-center justify-center rounded-lg border border-sky-400/30 bg-sky-500/10 px-4 py-2 text-sm font-medium text-sky-200 hover:bg-sky-500/20 focus:outline-none focus:ring-2 focus:ring-sky-400/40 disabled:opacity-60"
-                >
-                  {status === "sending" ? "Sending…" : "Send Message"}
-                </button>
+              <div className="sm:col-span-2 flex items-center gap-4">
+                <Magnetic strength={0.35}>
+                  <button
+                    type="submit"
+                    disabled={status === "sending"}
+                    data-cursor="Send"
+                    className="inline-flex items-center justify-center rounded-full bg-blue-500 px-7 py-3 text-sm font-semibold text-white transition hover:bg-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-400/40 disabled:opacity-60"
+                  >
+                    {status === "sending" ? "Sending…" : "Send Message"}
+                  </button>
+                </Magnetic>
                 {status === "sent" && (
                   <span className="text-sm text-emerald-400">Thanks! We’ll be in touch shortly.</span>
                 )}
@@ -216,7 +230,7 @@ const Contact: React.FC<Props> = ({
                 )}
               </div>
             </form>
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>

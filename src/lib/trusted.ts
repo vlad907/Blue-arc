@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 export type TrustedLogo = {
+  id?: string;
   name: string;
   src: string;
   href?: string;

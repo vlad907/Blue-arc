@@ -1,42 +1,77 @@
 [
   {
+    "id": "5114365f-9b6f-4422-a107-5fa8a8772c4b",
     "name": "Pour House",
     "src": "/logos/PourHouse.png"
   },
   {
+    "id": "1690b7f7-ba5d-48f8-a3c0-a33fafe1761c",
     "name": "Schuster Homes",
     "src": "/logos/schuster-homes.png"
   },
   {
+    "id": "5ea309ae-f415-4400-a9b1-e229948beb39",
     "name": "COMP",
     "src": "/logos/complogo.avif"
   },
   {
+    "id": "cdaec0f8-78d1-4b6e-b7e1-64d1675e5a09",
     "name": "Snider Services",
     "src": "/logos/imgl-ss-footer.jpg"
   },
   {
+    "id": "f870d10c-73e8-4645-b068-bda809b9d44b",
     "name": "NCR Voyix",
     "src": "/logos/ncr_voyix.svg"
   },
   {
+    "id": "30aed2fc-af0f-47f5-b98d-2a3e46411982",
     "name": "Avalon Communications",
     "src": "/logos/avalon-communications.png"
   },
   {
+    "id": "d728a681-77f8-4718-b9ae-1750efe8df02",
     "name": "Pivital",
     "src": "/logos/pivital.avif"
   },
   {
+    "id": "458d78f0-64d0-423e-8c1f-532d33ac6445",
     "name": "TST",
     "src": "/logos/tst.svg"
   },
   {
+    "id": "f449f5fd-85e8-4208-8228-67d209fd1daa",
     "name": "Data Max",
     "src": "/logos/data-max.png"
   },
   {
+    "id": "ce559e40-e21c-40d4-aa55-e5216f9e6608",
     "name": "TPX communications",
     "src": "/logos/tpx-communications.webp"
+  },
+  {
+    "id": "d4e4cac1-19be-454f-b9c5-920c2a96b446",
+    "name": "AIT services",
+    "src": "/logos/ait-services.png"
+  },
+  {
+    "id": "6275ece2-94c0-45d2-aa0a-23de9c2a42b7",
+    "name": "OPTUS inc",
+    "src": "/logos/optus-inc.webp"
+  },
+  {
+    "id": "d68ca37a-d237-4477-a5ba-f5716e7d961c",
+    "name": "Pro Dental",
+    "src": "/logos/pro-dental.png"
+  },
+  {
+    "id": "e39f2f08-253f-4b03-8052-a645a5a6fdc8",
+    "name": "Cafe Koda",
+    "src": "/logos/cafe-koda.webp"
+  },
+  {
+    "id": "ef7d397d-ae71-4b0b-b97a-6cc67a049fa8",
+    "name": "Crosscom",
+    "src": "/logos/crosscom.svg"
   }
 ]

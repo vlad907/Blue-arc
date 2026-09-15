@@ -2,6 +2,8 @@
 import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { assetPath } from "@/lib/asset-path";
+import { smoothScrollTo } from "@/lib/lenis";
+import { AnimatedText, Magnetic } from "@/components/motion";
 
 
 const Footer = () => {
@@ -9,17 +11,6 @@ const Footer = () => {
   useEffect(() => {
     const root = footerRef.current;
     if (!root) return;
-
-    const navEl = document.querySelector('nav') as HTMLElement | null;
-
-    const smoothScrollTo = (hash: string) => {
-      const id = hash.replace('#', '');
-      const target = document.getElementById(id);
-      if (!target) return;
-      const headerH = navEl?.offsetHeight || 0;
-      const y = target.getBoundingClientRect().top + window.scrollY - (headerH + 16);
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    };
 
     const onClick = (e: Event) => {
       const anchor = (e.target as HTMLElement).closest('a[href^="#"]') as HTMLAnchorElement | null;
@@ -36,8 +27,35 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer ref={footerRef} id="footer" className="bg-neutral-950 border-t border-white/10">
-      <div className="mx-auto max-w-7xl px-8 py-20 sm:py-24">
+    <footer ref={footerRef} id="footer" className="relative overflow-hidden bg-neutral-950 border-t border-white/10">
+      {/* Oversized kinetic CTA */}
+      <div className="relative mx-auto max-w-7xl px-6 pt-20 sm:pt-28">
+        <p className="font-display text-sm font-medium uppercase tracking-[0.3em] text-blue-400">
+          Let&apos;s work together
+        </p>
+        <AnimatedText
+          as="h2"
+          text="Ready to build something reliable?"
+          className="font-display mt-4 max-w-4xl text-4xl font-semibold leading-[1.05] tracking-tight text-white sm:text-6xl md:text-7xl"
+        />
+        <div className="mt-10">
+          <Magnetic strength={0.5}>
+            <a
+              href="#contact"
+              data-cursor="Let's talk"
+              className="group inline-flex items-center gap-3 rounded-full bg-blue-500 px-8 py-4 text-base font-semibold text-white transition hover:bg-blue-400"
+            >
+              Start a project
+              <svg className="h-5 w-5 transition-transform group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </a>
+          </Magnetic>
+        </div>
+        <div className="mt-20 h-px w-full bg-white/10" />
+      </div>
+
+      <div className="mx-auto max-w-7xl px-8 pb-20 pt-16 sm:pb-24">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 text-base sm:text-sm">
           <div>
             <Image
