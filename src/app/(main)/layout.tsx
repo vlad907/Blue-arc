@@ -1,7 +1,7 @@
 import NavBar from "@/components/NavBar";
 import Hero from "@/components/Hero";
 import Services from "@/components/services";
-import ProjectHighlights from "@/components/ProjectHighlights";
+import InstagramWork from "@/components/InstagramWork";
 import WhyChoose from "@/components/WhyChoose";
 import Trustedby from "@/components/trustedby";
 import Contact from "@/components/Contact";
@@ -13,11 +13,10 @@ import SmoothScrollProvider from "@/components/motion/SmoothScrollProvider";
 import Cursor from "@/components/motion/Cursor";
 import Preloader from "@/components/Preloader";
 import ScrollProgress from "@/components/ScrollProgress";
-import { getProjects } from "@/lib/projects";
 import { getTrusted } from "@/lib/trusted";
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
-  const [projects, trusted] = await Promise.all([getProjects(), getTrusted()]);
+  const trusted = await getTrusted();
 
   return (
     <SmoothScrollProvider>
@@ -28,7 +27,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
       <Hero />
       <MarqueeBand />
       <Services />
-      <ProjectHighlights items={projects} />
+      <InstagramWork />
       <About />
       <WhyChoose />
       <Trustedby logos={trusted} />
