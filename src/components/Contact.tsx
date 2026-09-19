@@ -46,7 +46,7 @@ const Contact: React.FC<Props> = ({
             `Service: ${payload.service || ""}\n\n` +
             `${payload.message || ""}`,
         });
-        window.location.href = `mailto:info@bluearcnetworks.com?${params.toString()}`;
+        window.location.href = `mailto:info@bluearcnetworks.tech?${params.toString()}`;
         setStatus("sent");
       } catch (innerErr: unknown) {
         setStatus("error");

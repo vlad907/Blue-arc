@@ -99,7 +99,7 @@ const Footer = () => {
                 <a href="tel:+15302089290" className="hover:text-sky-400">(530) 208-9290</a>
               </div>
               <div>
-                <a href="mailto:info@bluearcnetworks.com" className="hover:text-sky-400">info@bluearcnetworks.com</a>
+                <a href="mailto:info@bluearcnetworks.tech" className="hover:text-sky-400">info@bluearcnetworks.tech</a>
               </div>
               <div className="pt-2 text-neutral-500">Mon–Fri · 9am–5pm PT</div>
             </address>

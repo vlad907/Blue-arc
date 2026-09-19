@@ -99,7 +99,7 @@ const localBusinessJsonLd = {
   image: `${SITE_URL}${iconSrc}`,
   url: SITE_URL,
   telephone: "+1-530-208-9290",
-  email: "info@bluearcnetworks.com",
+  email: "info@bluearcnetworks.tech",
   priceRange: "$$",
   description:
     "Onsite IT support, network installation, structured cabling, and surveillance camera systems for businesses in Chico and Northern California.",
