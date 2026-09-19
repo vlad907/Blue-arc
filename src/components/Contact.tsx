@@ -113,6 +113,12 @@ const Contact: React.FC<Props> = ({
               </li>
               <li className="flex items-start gap-3">
                 <svg className="mt-0.5 h-5 w-5 flex-none text-sky-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                  <path d="M2.25 6.75A2.25 2.25 0 0 1 4.5 4.5h15a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75zm2.06-.06 7.69 5.13 7.69-5.13a.75.75 0 0 0-.69-.44H5a.75.75 0 0 0-.69.44zm15.19 1.62-7.27 4.85a.75.75 0 0 1-.83 0L3.13 8.31V17.25c0 .41.34.75.75.75h15a.75.75 0 0 0 .75-.75V8.31z"/>
+                </svg>
+                <a href="mailto:info@bluearcnetworks.tech" className="hover:underline">info@bluearcnetworks.tech</a>
+              </li>
+              <li className="flex items-start gap-3">
+                <svg className="mt-0.5 h-5 w-5 flex-none text-sky-400" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
                   <path d="M12 2.25c-3.866 0-7 3.03-7 6.75 0 5.25 7 12.75 7 12.75s7-7.5 7-12.75c0-3.72-3.134-6.75-7-6.75zm0 9.75a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
                 </svg>
                 Chico, CA
