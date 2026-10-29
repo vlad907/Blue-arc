@@ -20,6 +20,16 @@ const IG_HANDLE = "@bluearcnetworks";
  * (instagram.com/p/<CODE>/) and add it to the top of this list.
  */
 const POST_CODES = [
+  // Most recent (pulled 2026-10-29)
+  "De_-BwoG7SX",
+  "De3XvyQG_aH",
+  "DedWaaqFGy0",
+  "DeVMTEpkqrn",
+  "DeLDoFtnYZ3",
+  "DeI6oSilNYp",
+  "DeA6JNFiKkp",
+  "DeA6CI8GxEP",
+  // Earlier posts
   "Dc49xwAlAOC",
   "DcWHSeAG_0s",
   "DcNBtqCm5j5",
@@ -141,13 +151,18 @@ export default function InstagramWork() {
           </Magnetic>
         </div>
 
-        {/* Masonry wall of live Instagram posts (current page) */}
+        {/* Uniform grid of live Instagram posts (current page). Each tile is a
+            fixed-height box with the embed clipped + a soft fade, so every post
+            renders at the same size regardless of caption length. */}
         <div
           key={safePage}
-          className="mt-12 gap-6 [column-fill:_balance] columns-1 md:columns-2 xl:columns-3"
+          className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
         >
           {pagePosts.map((code) => (
-            <div key={code} className="mb-6 break-inside-avoid">
+            <div
+              key={code}
+              className="relative h-[560px] overflow-hidden rounded-xl border border-white/10 bg-white"
+            >
               <blockquote
                 className="instagram-media"
                 data-instgrm-permalink={`https://www.instagram.com/p/${code}/?utm_source=ig_embed&utm_campaign=loading`}
@@ -156,12 +171,12 @@ export default function InstagramWork() {
                 style={{
                   background: "#FFF",
                   border: 0,
-                  borderRadius: 12,
                   margin: 0,
                   width: "100%",
                   minWidth: "unset",
                 }}
               />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white via-white/85 to-transparent" />
             </div>
           ))}
         </div>
