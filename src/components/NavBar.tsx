@@ -76,18 +76,14 @@ export default function NavBar() {
 
     navEl.addEventListener("click", onClick);
 
-    const onLoadHash = () => {
-      if (location.hash) {
-        smoothScrollTo(location.hash);
-      }
-    };
+    // Note: the initial page-load hash (deep links from search results) is
+    // handled by <HashScroll>, which re-aligns after lazy content settles.
     const onHashChange = () => {
       if (location.hash) {
         smoothScrollTo(location.hash);
       }
     };
 
-    setTimeout(onLoadHash, 0);
     window.addEventListener("hashchange", onHashChange);
 
     const sections = ["home", "services", "ourwork", "about", "trustedby", "contact", "footer"];

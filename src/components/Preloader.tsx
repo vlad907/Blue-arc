@@ -23,7 +23,14 @@ export default function Preloader() {
     const finish = () => {
       document.body.style.overflow = "";
       getLenis()?.start();
-      window.scrollTo(0, 0);
+      // Only reset to the top on a normal load — if the page was deep-linked to
+      // a section (e.g. a Google "Contact" result → /#contact), leave the
+      // position alone and let HashScroll align to the target.
+      const id = decodeURIComponent((window.location.hash || "").slice(1));
+      if (!id || !document.getElementById(id)) {
+        window.scrollTo(0, 0);
+      }
+      document.documentElement.dataset.preloaded = "1";
       setDone(true);
       ScrollTrigger.refresh();
       window.dispatchEvent(new Event("preloader:done"));
