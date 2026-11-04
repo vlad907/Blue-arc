@@ -53,7 +53,9 @@ function InstagramIcon({ className }: { className?: string }) {
 
 export default function InstagramWork() {
   const [page, setPage] = useState(1);
+  const [inView, setInView] = useState(false);
   const isFirstRender = useRef(true);
+  const sectionRef = useRef<HTMLElement | null>(null);
 
   const totalPages = Math.max(1, Math.ceil(POST_CODES.length / POSTS_PER_PAGE));
   const safePage = Math.min(Math.max(1, page), totalPages);
@@ -62,8 +64,27 @@ export default function InstagramWork() {
     safePage * POSTS_PER_PAGE
   );
 
-  // Render the current page's embeds whenever the page changes.
+  // Defer the (third-party) Instagram embed script until the section is near
+  // the viewport — it's below the fold, so this keeps it off the initial load.
   useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "800px 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  // Render the current page's embeds whenever the page changes (once in view).
+  useEffect(() => {
+    if (!inView) return;
     const process = () => window.instgrm?.Embeds.process();
 
     // Layout shifts as each embed swaps its blockquote for a sized iframe;
@@ -87,7 +108,7 @@ export default function InstagramWork() {
     }
 
     return () => refreshes.forEach((id) => window.clearTimeout(id));
-  }, [safePage]);
+  }, [safePage, inView]);
 
   // Jump back to the top of the section on page change (not on first load).
   useEffect(() => {
@@ -100,6 +121,7 @@ export default function InstagramWork() {
 
   return (
     <section
+      ref={sectionRef}
       id="ourwork"
       className="relative isolate overflow-hidden bg-gradient-to-b from-neutral-950 to-neutral-900 py-20 sm:py-28"
     >

@@ -26,6 +26,8 @@ export default function Hero() {
   const video0Ref = useRef<HTMLVideoElement | null>(null);
   const video1Ref = useRef<HTMLVideoElement | null>(null);
   const [canPlayVideo, setCanPlayVideo] = useState(false);
+  /** Only load/play the background video on larger screens with full motion. */
+  const [videoEnabled, setVideoEnabled] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
   const sectionRef = useRef<HTMLElement | null>(null);
   const contentRef = useRef<HTMLDivElement | null>(null);
@@ -36,10 +38,17 @@ export default function Hero() {
 
   type NavigatorWithConnection = Navigator & { connection?: { saveData?: boolean } };
 
+  // Decide whether to use the (heavier) video background. On phones, with
+  // Data Saver, or reduced motion we show the lightweight poster instead.
   useEffect(() => {
     const prefersReducedData = (navigator as NavigatorWithConnection).connection?.saveData === true;
     const prefersReducedMotionFlag = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefersReducedData || prefersReducedMotionFlag) return;
+    const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+    setVideoEnabled(isDesktop && !prefersReducedData && !prefersReducedMotionFlag);
+  }, []);
+
+  useEffect(() => {
+    if (!videoEnabled) return;
 
     const videos = [video0Ref.current, video1Ref.current];
     const fadeStart = FADE_DURATION_MS / 1000;
@@ -115,7 +124,7 @@ export default function Hero() {
       videos.forEach((v) => v?.removeEventListener("timeupdate", onTimeUpdate));
       io.disconnect();
     };
-  }, [activeIndex]);
+  }, [activeIndex, videoEnabled]);
 
   /* Entrance timeline (after preloader) + scroll parallax + typewriter */
   useLayoutEffect(() => {
@@ -245,35 +254,45 @@ export default function Hero() {
       ref={sectionRef}
       className="relative isolate flex min-h-[92vh] flex-col overflow-hidden bg-neutral-950"
     >
-      {/* Layer 1: background video only (z-0) */}
+      {/* Layer 1: background (z-0) — video on desktop, poster image otherwise */}
       <div ref={videoLayerRef} className="absolute inset-0 z-0 will-change-transform">
-        {[0, 1].map((i) => (
-          <video
-            key={i}
-            ref={i === 0 ? video0Ref : video1Ref}
-            className="absolute inset-0 h-full w-full object-cover transition-opacity"
-            style={{
-              transitionDuration: `${FADE_DURATION_MS}ms`,
-              opacity: activeIndex === i ? 1 : 0,
-              zIndex: activeIndex === i ? 1 : 0,
-            }}
-            poster={i === 0 ? assetPath("/hero-poster.jpg") : undefined}
-            muted
-            playsInline
-            autoPlay={canPlayVideo && i === 0}
-            preload="metadata"
-            disablePictureInPicture
-            controls={false}
-            controlsList="nodownload noplaybackrate noremoteplayback"
-            src={i === 0 ? VIDEO_SOURCES[0].src : undefined}
-            onLoadedData={() => {
-              if (canPlayVideo && i === 0 && video0Ref.current) {
-                video0Ref.current.muted = true;
-                video0Ref.current.play().catch(() => {});
-              }
-            }}
+        {videoEnabled ? (
+          [0, 1].map((i) => (
+            <video
+              key={i}
+              ref={i === 0 ? video0Ref : video1Ref}
+              className="absolute inset-0 h-full w-full object-cover transition-opacity"
+              style={{
+                transitionDuration: `${FADE_DURATION_MS}ms`,
+                opacity: activeIndex === i ? 1 : 0,
+                zIndex: activeIndex === i ? 1 : 0,
+              }}
+              poster={i === 0 ? assetPath("/hero-poster.jpg") : undefined}
+              muted
+              playsInline
+              autoPlay={canPlayVideo && i === 0}
+              preload="metadata"
+              disablePictureInPicture
+              controls={false}
+              controlsList="nodownload noplaybackrate noremoteplayback"
+              src={i === 0 ? VIDEO_SOURCES[0].src : undefined}
+              onLoadedData={() => {
+                if (canPlayVideo && i === 0 && video0Ref.current) {
+                  video0Ref.current.muted = true;
+                  video0Ref.current.play().catch(() => {});
+                }
+              }}
+            />
+          ))
+        ) : (
+          /* eslint-disable-next-line @next/next/no-img-element */
+          <img
+            src={assetPath("/hero-poster.jpg")}
+            alt=""
+            aria-hidden="true"
+            className="absolute inset-0 h-full w-full object-cover"
           />
-        ))}
+        )}
       </div>
 
       {/* Layer 2: darkening — only covers video; pointer-events none (z-10) */}
