@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { ScrollTrigger } from "@/lib/gsap";
-import { smoothScrollTo } from "@/lib/lenis";
+import { gsap } from "@/lib/gsap";
+import { prefersReducedMotion } from "@/lib/lenis";
+import { assetPath } from "@/lib/asset-path";
 import { AnimatedText, Reveal, Magnetic } from "@/components/motion";
 
 declare global {
@@ -14,34 +15,64 @@ declare global {
 const IG_PROFILE = "https://www.instagram.com/bluearcnetworks/";
 const IG_HANDLE = "@bluearcnetworks";
 
+type IgItem = { code: string; type: "p" | "reel" };
+
 /**
- * Instagram post shortcodes (feed posts only — reels excluded), newest first.
- * To add a new post: open it on Instagram, copy the code from the URL
- * (instagram.com/p/<CODE>/) and add it to the top of this list.
+ * Instagram posts and reels, newest first.
+ * To add one: open it on Instagram, copy the code from the URL
+ * (instagram.com/p/<CODE>/ or instagram.com/reel/<CODE>/) and add it to the
+ * top of this list with the matching type.
  */
-const POST_CODES = [
-  // Most recent (pulled 2026-10-29)
-  "De_-BwoG7SX",
-  "De3XvyQG_aH",
-  "DedWaaqFGy0",
-  "DeVMTEpkqrn",
-  "DeLDoFtnYZ3",
-  "DeI6oSilNYp",
-  "DeA6JNFiKkp",
-  "DeA6CI8GxEP",
-  // Earlier posts
-  "Dc49xwAlAOC",
-  "DcWHSeAG_0s",
-  "DcNBtqCm5j5",
-  "DcEsQ4ZEuti",
-  "DbAVdU3lM8k",
-  "DY4j9XOlkeB",
-  "DX98ql8D07r",
-  "DX3FPaIlAH-",
+const IG_ITEMS: IgItem[] = [
+  // Most recent (pulled 2026-11-14)
+  { code: "DftgPDoi7jf", type: "reel" },
+  { code: "Dff8aIrD49a", type: "p" },
+  { code: "De_-BwoG7SX", type: "p" },
+  { code: "De3XvyQG_aH", type: "p" },
+  { code: "DeuNk4diFHh", type: "reel" },
+  { code: "DedWaaqFGy0", type: "p" },
+  { code: "DeYWneiiEYo", type: "reel" },
+  { code: "DeV0yi3C4BJ", type: "reel" },
+  { code: "DeVMTEpkqrn", type: "p" },
+  { code: "DeNrLiuiiIt", type: "reel" },
+  { code: "DeLDoFtnYZ3", type: "p" },
+  { code: "DeI6oSilNYp", type: "p" },
+  { code: "DeA6JNFiKkp", type: "p" },
+  { code: "DeA6CI8GxEP", type: "p" },
+  // Earlier
+  { code: "Dc49xwAlAOC", type: "p" },
+  { code: "DcvLR5cCBZZ", type: "reel" },
+  { code: "DcWHSeAG_0s", type: "p" },
+  { code: "DcNBtqCm5j5", type: "p" },
+  { code: "DcEsQ4ZEuti", type: "p" },
+  { code: "Db4fL-SiE5r", type: "reel" },
+  { code: "DbQ-lSVi9hq", type: "reel" },
+  { code: "DbAVdU3lM8k", type: "p" },
+  { code: "DZvhiqbyyZ5", type: "reel" },
+  { code: "DY4j9XOlkeB", type: "p" },
+  { code: "DX98ql8D07r", type: "p" },
+  { code: "DX3FPaIlAH-", type: "p" },
 ];
 
 const EMBED_SCRIPT = "https://www.instagram.com/embed.js";
-const POSTS_PER_PAGE = 3;
+/** Auto-scroll speed in px per second. */
+const DRIFT_SPEED = 45;
+
+const permalink = (item: IgItem) => `https://www.instagram.com/${item.type}/${item.code}/`;
+
+/** Load Instagram's embed script once, then render any pending blockquotes. */
+function processEmbeds() {
+  if (window.instgrm) {
+    window.instgrm.Embeds.process();
+    return;
+  }
+  if (document.querySelector(`script[src="${EMBED_SCRIPT}"]`)) return; // loading; onload will process
+  const s = document.createElement("script");
+  s.src = EMBED_SCRIPT;
+  s.async = true;
+  s.onload = () => window.instgrm?.Embeds.process();
+  document.body.appendChild(s);
+}
 
 function InstagramIcon({ className }: { className?: string }) {
   return (
@@ -51,73 +82,276 @@ function InstagramIcon({ className }: { className?: string }) {
   );
 }
 
-export default function InstagramWork() {
-  const [page, setPage] = useState(1);
-  const [inView, setInView] = useState(false);
-  const isFirstRender = useRef(true);
-  const sectionRef = useRef<HTMLElement | null>(null);
+/**
+ * One fixed-size tile. The embed is only mounted once the tile gets close to
+ * the viewport, so a long strip doesn't load every Instagram iframe up front.
+ * A transparent link covers the tile: click opens the post on Instagram, and
+ * the strip stays draggable (iframes would otherwise swallow the pointer).
+ */
+function IgTile({ item }: { item: IgItem }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [show, setShow] = useState(false);
 
-  const totalPages = Math.max(1, Math.ceil(POST_CODES.length / POSTS_PER_PAGE));
-  const safePage = Math.min(Math.max(1, page), totalPages);
-  const pagePosts = POST_CODES.slice(
-    (safePage - 1) * POSTS_PER_PAGE,
-    safePage * POSTS_PER_PAGE
-  );
-
-  // Defer the (third-party) Instagram embed script until the section is near
-  // the viewport — it's below the fold, so this keeps it off the initial load.
   useEffect(() => {
-    const el = sectionRef.current;
+    const el = ref.current;
     if (!el) return;
     const io = new IntersectionObserver(
       (entries) => {
         if (entries[0]?.isIntersecting) {
-          setInView(true);
+          setShow(true);
           io.disconnect();
         }
       },
-      { rootMargin: "800px 0px" }
+      { rootMargin: "400px 700px" }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
-  // Render the current page's embeds whenever the page changes (once in view).
   useEffect(() => {
-    if (!inView) return;
-    const process = () => window.instgrm?.Embeds.process();
+    if (show) processEmbeds();
+  }, [show]);
 
-    // Layout shifts as each embed swaps its blockquote for a sized iframe;
-    // refresh ScrollTrigger a few times so sections below stay aligned.
-    const refreshes = [1200, 2500, 4500].map((ms) =>
-      window.setTimeout(() => ScrollTrigger.refresh(), ms)
-    );
+  const isReel = item.type === "reel";
 
-    if (window.instgrm) {
-      process();
-    } else if (!document.querySelector(`script[src="${EMBED_SCRIPT}"]`)) {
-      const s = document.createElement("script");
-      s.src = EMBED_SCRIPT;
-      s.async = true;
-      s.onload = process;
-      document.body.appendChild(s);
-    } else {
-      // Script tag exists but may still be loading.
-      const t = window.setTimeout(process, 800);
-      refreshes.push(t);
-    }
+  return (
+    <div
+      ref={ref}
+      className="group w-[min(84vw,360px)] shrink-0 rounded-[1.25rem] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-2 shadow-2xl shadow-black/50 transition-[border-color,transform] duration-300 hover:-translate-y-1 hover:border-blue-400/40"
+    >
+      <div data-ig-type={item.type} className="relative h-[560px] overflow-hidden rounded-xl bg-white">
+        {/* Loading state shown until Instagram swaps in the post */}
+        <div
+          aria-hidden
+          className="ig-skeleton absolute inset-0 flex flex-col items-center justify-center gap-3 text-neutral-400"
+        >
+          <InstagramIcon className="h-8 w-8" />
+          <span className="text-xs font-medium uppercase tracking-[0.2em]">
+            Loading {isReel ? "reel" : "post"}
+          </span>
+        </div>
+        {show && (
+          <blockquote
+            className="instagram-media"
+            data-instgrm-permalink={`${permalink(item)}?utm_source=ig_embed&utm_campaign=loading`}
+            data-instgrm-version="14"
+            data-instgrm-captioned=""
+            style={{
+              background: "transparent",
+              border: 0,
+              margin: 0,
+              width: "100%",
+              minWidth: "unset",
+            }}
+          />
+        )}
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-20 bg-gradient-to-t from-white via-white/85 to-transparent" />
+        {/* Our own header, covering Instagram's (which on reels also carries
+            the audio/song credit). Same on every tile. */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-[3] flex h-[60px] items-center gap-3 border-b border-neutral-200 bg-white px-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-neutral-950">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={assetPath("/logos/Blue-arc-sm.png")}
+              alt=""
+              className="h-6 w-6 object-contain"
+              draggable={false}
+            />
+          </span>
+          <span className="min-w-0 flex-1 leading-tight">
+            <span className="block truncate text-sm font-semibold text-neutral-900">
+              bluearcnetworks
+            </span>
+            <span className="flex items-center gap-1 text-xs text-neutral-500">
+              <InstagramIcon className="h-3 w-3" />
+              {isReel ? "Reel" : "Post"}
+            </span>
+          </span>
+          <span className="shrink-0 rounded-md bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white">
+            {isReel ? "Watch" : "View"}
+          </span>
+        </div>
+        <a
+          href={permalink(item)}
+          target="_blank"
+          rel="noreferrer noopener"
+          draggable={false}
+          data-cursor="View"
+          aria-label={`View this ${isReel ? "reel" : "post"} on Instagram`}
+          className="absolute inset-0 z-[4]"
+        />
+      </div>
+    </div>
+  );
+}
 
-    return () => refreshes.forEach((id) => window.clearTimeout(id));
-  }, [safePage, inView]);
+export default function InstagramWork() {
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const scrollerRef = useRef<HTMLDivElement | null>(null);
+  const progressRef = useRef<HTMLDivElement | null>(null);
 
-  // Jump back to the top of the section on page change (not on first load).
+  // Auto-scroll: drift the strip sideways, pause on hover/touch/drag, rewind
+  // at the end. Manual scrolling (swipe, trackpad, drag) always wins.
   useEffect(() => {
-    if (isFirstRender.current) {
-      isFirstRender.current = false;
-      return;
-    }
-    smoothScrollTo("#ourwork");
-  }, [safePage]);
+    const el = scrollerRef.current;
+    const section = sectionRef.current;
+    if (!el || !section) return;
+
+    const maxScroll = () => el.scrollWidth - el.clientWidth;
+
+    const onScroll = () => {
+      const max = maxScroll();
+      if (progressRef.current) {
+        progressRef.current.style.transform = `scaleX(${max > 0 ? el.scrollLeft / max : 0})`;
+      }
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+
+    // --- drag to browse with a mouse (touch + trackpad scroll natively) ---
+    let dragging = false;
+    let dragMoved = false;
+    let startX = 0;
+    let startLeft = 0;
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse" || e.button !== 0) return;
+      dragging = true;
+      dragMoved = false;
+      startX = e.clientX;
+      startLeft = el.scrollLeft;
+    };
+    const onPointerMove = (e: PointerEvent) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      if (!dragMoved && Math.abs(dx) > 5) {
+        dragMoved = true;
+        el.setPointerCapture(e.pointerId);
+      }
+      if (dragMoved) el.scrollLeft = startLeft - dx;
+    };
+    const endDrag = () => {
+      dragging = false;
+    };
+    // A drag shouldn't also open the post it started on.
+    const onClickCapture = (e: MouseEvent) => {
+      if (dragMoved) {
+        e.preventDefault();
+        e.stopPropagation();
+        dragMoved = false;
+      }
+    };
+    el.addEventListener("pointerdown", onPointerDown);
+    el.addEventListener("pointermove", onPointerMove);
+    el.addEventListener("pointerup", endDrag);
+    el.addEventListener("pointercancel", endDrag);
+    el.addEventListener("click", onClickCapture, true);
+
+    const cleanupBase = () => {
+      el.removeEventListener("scroll", onScroll);
+      el.removeEventListener("pointerdown", onPointerDown);
+      el.removeEventListener("pointermove", onPointerMove);
+      el.removeEventListener("pointerup", endDrag);
+      el.removeEventListener("pointercancel", endDrag);
+      el.removeEventListener("click", onClickCapture, true);
+    };
+
+    if (prefersReducedMotion()) return cleanupBase;
+
+    // --- drift ---
+    let raf = 0;
+    let last = performance.now();
+    let pos = el.scrollLeft;
+    let lastSet = el.scrollLeft;
+    let inView = false;
+    let hovered = false;
+    let touchHold = false;
+    let rewinding = false;
+    let holdUntil = 0;
+    let touchTimer: number | undefined;
+    let rewindTimer: number | undefined;
+    let rewindTween: gsap.core.Tween | undefined;
+
+    const tick = (now: number) => {
+      raf = requestAnimationFrame(tick);
+      const dt = Math.min(64, now - last) / 1000;
+      last = now;
+
+      if (!inView || hovered || touchHold || dragging || rewinding || now < holdUntil) {
+        pos = el.scrollLeft;
+        lastSet = pos;
+        return;
+      }
+      // The visitor scrolled it themselves — pick up from where they left it.
+      if (Math.abs(el.scrollLeft - lastSet) > 2) pos = el.scrollLeft;
+
+      const max = maxScroll();
+      if (max <= 0) return;
+
+      if (pos >= max - 1) {
+        rewinding = true;
+        rewindTimer = window.setTimeout(() => {
+          rewindTween = gsap.to(el, {
+            scrollLeft: 0,
+            duration: 1.8,
+            ease: "power2.inOut",
+            onComplete: () => {
+              rewinding = false;
+              holdUntil = performance.now() + 1200;
+            },
+          });
+        }, 1800);
+        return;
+      }
+
+      pos += DRIFT_SPEED * dt;
+      el.scrollLeft = pos;
+      lastSet = el.scrollLeft;
+    };
+    raf = requestAnimationFrame(tick);
+
+    const io = new IntersectionObserver((entries) => {
+      inView = !!entries[0]?.isIntersecting;
+    });
+    io.observe(section);
+
+    const onEnter = (e: PointerEvent) => {
+      if (e.pointerType === "mouse") hovered = true;
+    };
+    const onLeave = (e: PointerEvent) => {
+      if (e.pointerType === "mouse") hovered = false;
+    };
+    const onTouchStart = () => {
+      touchHold = true;
+      window.clearTimeout(touchTimer);
+    };
+    const onTouchEnd = () => {
+      window.clearTimeout(touchTimer);
+      touchTimer = window.setTimeout(() => {
+        touchHold = false;
+      }, 3000);
+    };
+    el.addEventListener("pointerenter", onEnter);
+    el.addEventListener("pointerleave", onLeave);
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+    el.addEventListener("touchcancel", onTouchEnd, { passive: true });
+
+    return () => {
+      cleanupBase();
+      cancelAnimationFrame(raf);
+      window.clearTimeout(touchTimer);
+      window.clearTimeout(rewindTimer);
+      rewindTween?.kill();
+      io.disconnect();
+      el.removeEventListener("pointerenter", onEnter);
+      el.removeEventListener("pointerleave", onLeave);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchend", onTouchEnd);
+      el.removeEventListener("touchcancel", onTouchEnd);
+    };
+  }, []);
+
+  const reelCount = IG_ITEMS.filter((i) => i.type === "reel").length;
 
   return (
     <section
@@ -172,87 +406,35 @@ export default function InstagramWork() {
             </a>
           </Magnetic>
         </div>
+      </div>
 
-        {/* Uniform grid of live Instagram posts (current page). Each tile is a
-            fixed-height box with the embed clipped + a soft fade, so every post
-            renders at the same size regardless of caption length. */}
+      {/* Full-bleed, auto-scrolling strip of posts and reels */}
+      <div className="relative mt-10">
         <div
-          key={safePage}
-          className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+          ref={scrollerRef}
+          role="region"
+          aria-label="Recent Instagram posts and reels"
+          tabIndex={0}
+          className="no-scrollbar flex gap-6 overflow-x-auto px-5 py-4 focus:outline-none sm:px-8 lg:px-[max(2rem,calc((100vw-72rem)/2+2rem))]"
         >
-          {pagePosts.map((code) => (
-            <div
-              key={code}
-              className="group rounded-[1.25rem] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-2 shadow-2xl shadow-black/50 transition-[border-color,transform] duration-300 hover:-translate-y-1 hover:border-blue-400/40"
-            >
-            <div className="relative h-[560px] overflow-hidden rounded-xl bg-white">
-              {/* Loading state shown until Instagram swaps in the post */}
-              <div
-                aria-hidden
-                className="ig-skeleton absolute inset-0 flex flex-col items-center justify-center gap-3 text-neutral-400"
-              >
-                <InstagramIcon className="h-8 w-8" />
-                <span className="text-xs font-medium uppercase tracking-[0.2em]">Loading post</span>
-              </div>
-              <blockquote
-                className="instagram-media"
-                data-instgrm-permalink={`https://www.instagram.com/p/${code}/?utm_source=ig_embed&utm_campaign=loading`}
-                data-instgrm-version="14"
-                data-instgrm-captioned=""
-                style={{
-                  background: "transparent",
-                  border: 0,
-                  margin: 0,
-                  width: "100%",
-                  minWidth: "unset",
-                }}
-              />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-20 bg-gradient-to-t from-white via-white/85 to-transparent" />
-            </div>
-            </div>
+          {IG_ITEMS.map((item) => (
+            <IgTile key={item.code} item={item} />
           ))}
         </div>
+        {/* edge fades */}
+        <div className="pointer-events-none absolute inset-y-0 left-0 w-8 bg-gradient-to-r from-neutral-950 to-transparent sm:w-20" />
+        <div className="pointer-events-none absolute inset-y-0 right-0 w-8 bg-gradient-to-l from-neutral-950 to-transparent sm:w-20" />
+      </div>
 
-        {totalPages > 1 && (
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-2">
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={safePage <= 1}
-              data-cursor="true"
-              className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Previous
-            </button>
-            <div className="flex items-center gap-1">
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <button
-                  key={p}
-                  type="button"
-                  onClick={() => setPage(p)}
-                  data-cursor="true"
-                  aria-current={p === safePage ? "page" : undefined}
-                  className={`h-9 w-9 rounded-lg text-sm font-medium transition ${
-                    p === safePage
-                      ? "border border-blue-400/50 bg-blue-500/20 text-blue-200"
-                      : "border border-white/10 bg-white/5 text-white/80 hover:bg-white/10"
-                  }`}
-                >
-                  {p}
-                </button>
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={safePage >= totalPages}
-              data-cursor="true"
-              className="rounded-lg border border-white/10 bg-white/5 px-4 py-2 text-sm font-medium text-white/90 transition hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Next
-            </button>
+      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+        <div className="mt-6 flex items-center gap-4">
+          <div className="h-px flex-1 overflow-hidden bg-white/10">
+            <div ref={progressRef} className="h-full w-full origin-left scale-x-0 bg-blue-500" />
           </div>
-        )}
+          <p className="shrink-0 text-xs font-medium uppercase tracking-[0.2em] text-neutral-500">
+            {IG_ITEMS.length - reelCount} posts · {reelCount} reels
+          </p>
+        </div>
 
         <div className="mt-14 text-center">
           <Magnetic strength={0.4}>

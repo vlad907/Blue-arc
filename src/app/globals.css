@@ -190,6 +190,20 @@ body {
   position: relative;
   z-index: 1;
 }
+/* Reel embeds have a taller header (audio credit); nudge them up so it stays
+   fully under our own header bar. */
+#ourwork [data-ig-type="reel"] iframe.instagram-media {
+  margin-top: -24px !important;
+}
+
+/* Horizontally scrollable strip without a visible scrollbar */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
 
 /* Dark-mode treatment for the embedded Google map */
 .map-dark {
