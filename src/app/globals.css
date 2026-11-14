@@ -79,6 +79,17 @@ body {
   color: transparent;
 }
 
+/* Giant footer wordmark: outlined, fading into the page edge */
+.footer-wordmark {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(96, 165, 250, 0.55);
+  background: linear-gradient(180deg, rgba(59, 130, 246, 0.22), rgba(59, 130, 246, 0) 75%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-mask-image: linear-gradient(180deg, #000 35%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 35%, transparent 100%);
+}
+
 /* Fine film grain overlay for depth */
 .grain::after {
   content: "";
@@ -109,6 +120,87 @@ body {
 .link-underline:hover::after {
   transform: scaleX(1);
   transform-origin: left;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Surface depth: spotlight cards, dot grid, signal arcs              */
+/* ------------------------------------------------------------------ */
+
+/* Card that lights up under the cursor (--mx/--my set by SpotlightEffect) */
+.spotlight {
+  position: relative;
+  isolation: isolate;
+}
+.spotlight::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    420px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(59, 130, 246, 0.16),
+    transparent 65%
+  );
+  transition: opacity 0.35s ease;
+}
+.spotlight:hover::before {
+  opacity: 1;
+}
+
+/* Faint dot grid that fades out toward the edges */
+.bg-dots {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px);
+  background-size: 28px 28px;
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 50% 45%, #000 20%, transparent 100%);
+  mask-image: radial-gradient(ellipse 75% 65% at 50% 45%, #000 20%, transparent 100%);
+}
+
+/* Concentric "signal" arcs — the Blue Arc motif */
+@keyframes arc-pulse {
+  0%,
+  100% {
+    opacity: var(--arc-min, 0.12);
+  }
+  50% {
+    opacity: var(--arc-max, 0.55);
+  }
+}
+.signal-arc {
+  animation: arc-pulse 4.5s ease-in-out infinite;
+}
+
+/* Loading shimmer behind Instagram embeds */
+@keyframes ig-shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+.ig-skeleton {
+  background: linear-gradient(100deg, #f3f4f6 30%, #e5e7eb 50%, #f3f4f6 70%);
+  background-size: 200% 100%;
+  animation: ig-shimmer 1.6s linear infinite;
+}
+#ourwork iframe.instagram-media {
+  position: relative;
+  z-index: 1;
+}
+
+/* Dark-mode treatment for the embedded Google map */
+.map-dark {
+  filter: invert(0.92) hue-rotate(180deg) saturate(0.7) brightness(0.95) contrast(0.92);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .signal-arc,
+  .ig-skeleton {
+    animation: none;
+  }
 }
 
 /* Blinking typewriter caret in the hero headline */

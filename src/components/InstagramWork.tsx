@@ -183,22 +183,32 @@ export default function InstagramWork() {
           {pagePosts.map((code) => (
             <div
               key={code}
-              className="relative h-[560px] overflow-hidden rounded-xl border border-white/10 bg-white"
+              className="group rounded-[1.25rem] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.02] p-2 shadow-2xl shadow-black/50 transition-[border-color,transform] duration-300 hover:-translate-y-1 hover:border-blue-400/40"
             >
+            <div className="relative h-[560px] overflow-hidden rounded-xl bg-white">
+              {/* Loading state shown until Instagram swaps in the post */}
+              <div
+                aria-hidden
+                className="ig-skeleton absolute inset-0 flex flex-col items-center justify-center gap-3 text-neutral-400"
+              >
+                <InstagramIcon className="h-8 w-8" />
+                <span className="text-xs font-medium uppercase tracking-[0.2em]">Loading post</span>
+              </div>
               <blockquote
                 className="instagram-media"
                 data-instgrm-permalink={`https://www.instagram.com/p/${code}/?utm_source=ig_embed&utm_campaign=loading`}
                 data-instgrm-version="14"
                 data-instgrm-captioned=""
                 style={{
-                  background: "#FFF",
+                  background: "transparent",
                   border: 0,
                   margin: 0,
                   width: "100%",
                   minWidth: "unset",
                 }}
               />
-              <div className="pointer-events-none absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-white via-white/85 to-transparent" />
+              <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-20 bg-gradient-to-t from-white via-white/85 to-transparent" />
+            </div>
             </div>
           ))}
         </div>

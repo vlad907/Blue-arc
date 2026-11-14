@@ -12,9 +12,16 @@ type Props = {
   subtitle?: string;
 };
 
+/**
+ * Dark-on-transparent logos disappear on the dark tiles, so data/trusted.json
+ * tags them with this className to render as white silhouettes. (Declared here
+ * so Tailwind always generates the classes.)
+ */
+export const WHITE_SILHOUETTE = "brightness-0 invert";
+
 function LogoTile({ item }: { item: TrustedLogo }) {
   const inner = (
-    <div className="group mx-3 flex h-28 w-56 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.04] px-6 backdrop-blur transition hover:border-white/25 hover:bg-white/[0.07]">
+    <div className="spotlight group mx-3 flex h-28 w-56 items-center justify-center rounded-2xl border border-white/10 bg-white/[0.05] px-6 transition-[border-color] duration-300 hover:border-blue-400/40">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={assetPath(item.src)}
@@ -22,7 +29,7 @@ function LogoTile({ item }: { item: TrustedLogo }) {
         loading="lazy"
         className={
           (item.className ? item.className + " " : "") +
-          "max-h-14 max-w-[150px] w-auto object-contain opacity-60 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0"
+          "max-h-14 max-w-[150px] w-auto rounded-sm object-contain opacity-75 grayscale transition duration-300 group-hover:opacity-100 group-hover:grayscale-0"
         }
       />
     </div>

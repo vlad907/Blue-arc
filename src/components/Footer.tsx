@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import Image from "next/image";
 import { assetPath } from "@/lib/asset-path";
 import { smoothScrollTo } from "@/lib/lenis";
-import { AnimatedText, Magnetic } from "@/components/motion";
+import { AnimatedText, Magnetic, Reveal } from "@/components/motion";
 
 
 const Footer = () => {
@@ -27,7 +27,12 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer ref={footerRef} id="footer" className="relative overflow-hidden bg-neutral-950 border-t border-white/10">
+    <footer ref={footerRef} id="footer" className="relative isolate overflow-hidden bg-neutral-950 border-t border-white/10">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-40 right-0 -z-10 h-[34rem] w-[34rem] rounded-full bg-blue-600/15 blur-3xl"
+      />
+      <div aria-hidden className="bg-dots pointer-events-none absolute inset-x-0 top-0 -z-10 h-[32rem]" />
       {/* Oversized kinetic CTA */}
       <div className="relative mx-auto max-w-7xl px-6 pt-20 sm:pt-28">
         <p className="font-display text-sm font-medium uppercase tracking-[0.3em] text-blue-400">
@@ -55,11 +60,11 @@ const Footer = () => {
         <div className="mt-20 h-px w-full bg-white/10" />
       </div>
 
-      <div className="mx-auto max-w-7xl px-8 pb-20 pt-16 sm:pb-24">
+      <div className="mx-auto max-w-7xl px-8 pb-10 pt-16">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-4 text-base sm:text-sm">
           <div>
             <Image
-              src={assetPath("/logos/Blue-arc-networks.png")}
+              src={assetPath("/logos/Blue-arc-networks-sm.png")}
               alt="Blue Arc Networks"
               width={256}
               height={64}
@@ -108,6 +113,15 @@ const Footer = () => {
         <div className="mt-12 border-t border-white/10 pt-6 text-center text-sm text-neutral-500">
           © {new Date().getFullYear()} Blue Arc Networks · IT &amp; Network Services in Chico, CA. All rights reserved.
         </div>
+      </div>
+
+      {/* Oversized outlined wordmark closing out the page */}
+      <div aria-hidden className="pointer-events-none select-none overflow-hidden pb-24 md:pb-0">
+        <Reveal y={80} duration={1.4} start="top 98%">
+          <div className="footer-wordmark font-display -mb-[0.14em] whitespace-nowrap text-center text-[21vw] font-semibold leading-none tracking-tight">
+            BLUE ARC
+          </div>
+        </Reveal>
       </div>
     </footer>
   );

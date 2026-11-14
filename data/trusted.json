@@ -22,12 +22,14 @@
   {
     "id": "f870d10c-73e8-4645-b068-bda809b9d44b",
     "name": "NCR Voyix",
-    "src": "/logos/ncr_voyix.svg"
+    "src": "/logos/ncr_voyix.svg",
+    "className": "brightness-0 invert"
   },
   {
     "id": "30aed2fc-af0f-47f5-b98d-2a3e46411982",
     "name": "Avalon Communications",
-    "src": "/logos/avalon-communications.png"
+    "src": "/logos/avalon-communications.png",
+    "className": "brightness-0 invert"
   },
   {
     "id": "d728a681-77f8-4718-b9ae-1750efe8df02",
@@ -52,7 +54,8 @@
   {
     "id": "d4e4cac1-19be-454f-b9c5-920c2a96b446",
     "name": "AIT services",
-    "src": "/logos/ait-services.png"
+    "src": "/logos/ait-services.png",
+    "className": "brightness-0 invert"
   },
   {
     "id": "6275ece2-94c0-45d2-aa0a-23de9c2a42b7",
@@ -62,7 +65,8 @@
   {
     "id": "d68ca37a-d237-4477-a5ba-f5716e7d961c",
     "name": "Pro Dental",
-    "src": "/logos/pro-dental.png"
+    "src": "/logos/pro-dental.png",
+    "className": "brightness-0 invert"
   },
   {
     "id": "e39f2f08-253f-4b03-8052-a645a5a6fdc8",

@@ -311,9 +311,9 @@ export default function Hero() {
       {/* Layer 3: content (z-20) */}
       <div className="relative z-20 flex min-h-0 flex-1 flex-col justify-center px-5 pb-24 pt-28 sm:px-8 lg:px-12">
         <div ref={contentRef} className="mx-auto w-full max-w-6xl">
-          <div className="hero-fade flex items-center gap-3">
+          <div className="hero-fade hidden items-center gap-3 md:flex">
             <Image
-              src={assetPath("/logos/Blue-arc.png")}
+              src={assetPath("/logos/Blue-arc-sm.png")}
               alt="Blue Arc Networks logo"
               width={120}
               height={48}

@@ -206,7 +206,7 @@ export default function NavBar() {
             }}
           >
             <Image
-              src={assetPath("/logos/Blue-arc.png")}
+              src={assetPath("/logos/Blue-arc-sm.png")}
               alt="Blue Arc Logo"
               width={160}
               height={64}
@@ -225,7 +225,7 @@ export default function NavBar() {
           aria-label="Blue Arc Networks home"
         >
           <Image
-            src={assetPath("/logos/Blue-arc.png")}
+            src={assetPath("/logos/Blue-arc-sm.png")}
             alt="Blue Arc Networks logo"
             width={120}
             height={48}

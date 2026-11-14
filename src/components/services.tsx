@@ -137,7 +137,7 @@ function ServiceCardBody({ service, index }: { service: Service; index: number }
         <span className="inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-blue-500/15 text-blue-300 ring-1 ring-inset ring-blue-400/30">
           <Icon name={service.icon} />
         </span>
-        <span className="font-display text-5xl font-semibold text-white/10">
+        <span className="font-display bg-gradient-to-b from-white/30 to-white/[0.03] bg-clip-text text-6xl font-semibold leading-none text-transparent transition-colors duration-300 group-hover:from-blue-300/70">
           {String(index + 1).padStart(2, "0")}
         </span>
       </div>
@@ -153,6 +153,19 @@ function ServiceCardBody({ service, index }: { service: Service; index: number }
           </li>
         ))}
       </ul>
+      <div className="mt-auto pt-6">
+        <a
+          href="#contact"
+          className="flex items-center justify-between border-t border-white/10 pt-5 text-sm font-medium text-neutral-300 transition-colors hover:text-white"
+        >
+          Get a quote for this
+          <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 transition duration-300 group-hover:border-blue-400/60 group-hover:bg-blue-500 group-hover:text-white">
+            <svg className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </span>
+        </a>
+      </div>
     </>
   );
 }
@@ -216,7 +229,13 @@ export default function Services() {
 
       {/* Desktop: pinned horizontal scroll */}
       <div ref={pinRef} className="relative hidden h-screen overflow-hidden lg:block">
-        <div className="flex h-full items-center">
+        {/* atmosphere */}
+        <div aria-hidden className="bg-dots pointer-events-none absolute inset-0" />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-40 top-1/2 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full bg-blue-600/10 blur-3xl"
+        />
+        <div className="relative flex h-full items-center">
           <div ref={trackRef} className="flex h-full items-center gap-8 pl-[8vw] pr-[8vw]">
             {/* Intro panel */}
             <div className="flex h-[62vh] w-[42vw] shrink-0 flex-col justify-center pr-8">
@@ -245,8 +264,12 @@ export default function Services() {
               <article
                 key={service.title}
                 data-cursor="true"
-                className="group flex h-[62vh] w-[30vw] max-w-[440px] shrink-0 flex-col rounded-3xl border border-white/10 bg-white/[0.03] p-8 backdrop-blur-md transition-colors duration-300 hover:border-blue-400/40 hover:bg-white/[0.06] xl:p-10"
+                className="spotlight group flex h-[64vh] max-h-[620px] w-[30vw] max-w-[440px] shrink-0 flex-col overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.015] p-8 shadow-2xl shadow-black/40 transition-[border-color,transform] duration-300 hover:-translate-y-1.5 hover:border-blue-400/40 xl:p-10"
               >
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-blue-400/70 to-transparent opacity-40 transition-opacity duration-300 group-hover:opacity-100"
+                />
                 <ServiceCardBody service={service} index={i} />
               </article>
             ))}
@@ -286,7 +309,7 @@ export default function Services() {
           {SERVICES.map((service, i) => (
             <article
               key={service.title}
-              className="flex flex-col rounded-3xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-md sm:p-8"
+              className="spotlight group flex flex-col rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.06] to-white/[0.015] p-6 sm:p-8"
             >
               <ServiceCardBody service={service} index={i} />
             </article>

@@ -14,6 +14,7 @@ import Cursor from "@/components/motion/Cursor";
 import Preloader from "@/components/Preloader";
 import ScrollProgress from "@/components/ScrollProgress";
 import HashScroll from "@/components/HashScroll";
+import SpotlightEffect from "@/components/motion/SpotlightEffect";
 import { getTrusted } from "@/lib/trusted";
 
 export default async function MainLayout({ children }: { children: React.ReactNode }) {
@@ -25,6 +26,7 @@ export default async function MainLayout({ children }: { children: React.ReactNo
       <Cursor />
       <ScrollProgress />
       <HashScroll />
+      <SpotlightEffect />
       <NavBar />
       <Hero />
       <MarqueeBand />
